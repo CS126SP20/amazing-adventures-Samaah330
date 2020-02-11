@@ -10,8 +10,10 @@ import org.junit.Test;
 import java.io.PrintStream;
 import java.io.File;
 
-// how do i make these tests?
-// use print stream and test helper methods
+
+// how do i test to see if the file is right
+
+
 public class AdventureTest {
     Adventure a;
     @Before
@@ -36,27 +38,6 @@ public class AdventureTest {
         assertEquals(true, isDirectionValid);
     }
     // make more tests like this
-
-    // testing initializeStartingRoom() helper method (do i even have to test this, what is there about this to test)
-    @Test
-    public void startingRoom() {
-        String startingDescription = Game.initializeStartingRoom(a);
-        // if file name is for library this happens
-        File file = new File("src/main/resources/siebel.json");
-        // if file name is for siebel or if there is no file name then this should happen
-    }
-
-    // tests for getNextRoomDescription()
-
-    //tests for getRoomByName()
-
-    // tests for getDirectionByName()
-    /*@Test
-    public void directionName() {
-        Direction d =
-    }*/
-
-
 
    /* @Test
     public void sanityCheck() {

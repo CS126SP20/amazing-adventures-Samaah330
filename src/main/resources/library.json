@@ -1,0 +1,88 @@
+{
+  "startingRoom": "GregoryDrive",
+  "endingRoom": "basement",
+  "rooms": [
+    {
+      "name": "GregoryDrive",
+      "description": "You are on Gregory Drive, outside of the library.",
+      "items": ["coin"],
+      "directions": [
+        {
+          "directionName": "East",
+          "room": "LibraryEntry"
+        }
+      ]
+    },
+    {
+      "name": "LibraryEntry",
+      "description": "You are in the west entry of Library. You can see the staircases that lead you up or down.",
+      "items": ["sweatshirt", "key"],
+      "directions": [
+        {
+          "directionName": "Up",
+          "room": "Upstairs"
+        },
+        {
+          "directionName": "Down",
+          "room": "Downstairs"
+        }
+      ]
+    },
+    {
+      "name": "Upstairs",
+      "description": "You are in the downstairs of the library. You see a study area",
+      "items": ["books", "swag"],
+      "directions": [
+        {
+          "directionName": "East",
+          "room": "StudyArea"
+        }
+      ]
+    },
+    {
+      "name": "StudyArea",
+      "description": "You are in the Study Area and see lots of students on studying.",
+      "items" : ["books", "tables"],
+      "directions": [
+        {
+          "directionName": "West",
+          "room": "LibraryEntry"
+        }
+      ]
+    },
+    {
+      "name": "Upstairs",
+      "description": "You are in the upstairs of the library. You see doors to a meeting area",
+      "items": ["USB-C connector", "grading rubric"],
+      "directions": [
+        {
+          "directionName": "West",
+          "room": "LibraryEntry"
+        },
+        {
+          "directionName": "SouthEast",
+          "room": "MeetingArea"
+        }
+      ]
+    },
+    {
+      "name": "MeetingArea",
+      "description": "You are in the meeting area and see English teachers discussing curriculum ",
+      "items": ["bagel", "coffee"],
+      "directions": [
+        {
+          "directionName": "West",
+          "room": "LibraryEntry"
+        },
+        {
+          "directionName": "South",
+          "room": "Upstairs"
+        },
+        {
+          "directionName": "Down",
+          "room": "StudyArea"
+        }
+      ]
+    }
+  ]
+}
