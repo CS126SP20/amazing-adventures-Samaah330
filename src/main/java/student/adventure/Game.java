@@ -4,6 +4,11 @@ package student.adventure;
 // go something
 // how to test?
 public class Game {
+    static String directionRoomName;
+    static int count = 0;
+    public static String initializeStartingRoom(Adventure adventureExplorer) {
+        return "";
+    }
 
     public static boolean isDirectionValidGo(Adventure adventure, String inputDirection) {
         String inputGo = inputDirection.substring(0,3);
@@ -14,5 +19,7 @@ public class Game {
         }
         return false;
     }
-
+    public static String getNextRoomDescription(Adventure adventureExplorer, String directionName) {
+        return "";
+    }
 }
