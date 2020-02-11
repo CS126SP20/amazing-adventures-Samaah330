@@ -6,7 +6,13 @@ package student.adventure;
 public class Game {
 
     public static boolean isDirectionValidGo(Adventure adventure, String inputDirection) {
-       return false;
+        String inputGo = inputDirection.substring(0,3);
+        String inputRest = inputDirection.substring(3,inputDirection.length());
+       // boolean directionExists = adventure.getRoomByName();
+        if (inputGo.equalsIgnoreCase("go ")) {
+            return true;
+        }
+        return false;
     }
 
 }
