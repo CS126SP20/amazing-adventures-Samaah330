@@ -4,46 +4,81 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
-import java.io.PrintStream;
 import java.io.File;
 
-
-// how do i test to see if the file is right
-
-
 public class AdventureTest {
-    Adventure a;
+    Adventure objAdventure;
+    Game objGame;
+
     @Before
     public void setUp() {
-        // This is run before every test.
-        a = new Adventure();
+        File file = new File("src/main/resources/siebel.json");
+        try {
+            objAdventure = new ObjectMapper().readValue(file, Adventure.class);
+        } catch (Exception exception) {
+
+        }
+        objGame = new Game();
+
     }
-    // testing is isDirectionValidGo() helper method
     @Test
     public void isGoValidRandomLetters() {
-        Boolean isDirectionValid = Game.isDirectionValidGo(a, "kjla");
+        Boolean isDirectionValid = objGame.isDirectionValidGo("kjla");
         assertEquals(false, isDirectionValid);
     }
     @Test
     public void isGoValid() {
-        Boolean isDirectionValid = Game.isDirectionValidGo(a, "goEast");
+        Boolean isDirectionValid = objGame.isDirectionValidGo("goEast");
         assertEquals(false, isDirectionValid);
     }
     @Test
     public void isGoValid1() {
-        Boolean isDirectionValid = Game.isDirectionValidGo(a, "gO East");
+        Boolean isDirectionValid = objGame.isDirectionValidGo("gO East");
         assertEquals(true, isDirectionValid);
     }
-    // make more tests like this
+    @Test
+    public void isRoomDescriptionCorrect() {
+       String roomName = "SiebelEntry";
+       String roomDescription =  objAdventure.getRoomByName(roomName).getDescription();
 
-   /* @Test
-    public void sanityCheck() {
-        // TODO: Remove this unnecessary test case.
-        //assertThat("CS 126: Software Design Studio", CoreMatchers.containsString("Software"));
+       assertEquals("You are in the west entry of Siebel Center. You can see the elevator," +
+               "the ACM office, and hallways to the north and east.", roomDescription);
     }
+    @Test
+    public void isValidDirectionFromSiebelEntryToEast() {
+        String roomName = "SiebelEntry";
+        String direction = "eAst";
+        String nextRoom = objAdventure.getRoomByName(roomName).getDirectionByName(direction).getRoom();
+        String nextRoomDescription = objAdventure.getRoomByName(nextRoom).getDescription();
 
-    */
+        assertEquals("You are in the east hallway.  You can see Einstein Bros' Bagels and a stairway."
+                ,nextRoomDescription);
+    }
+    @Test
+    public void isValidDirectionFromSiebelBasementToUp() {
+        String roomName = "SiebelBasement";
+        String direction = "UP";
+        String nextRoom = objAdventure.getRoomByName(roomName).getDirectionByName(direction).getRoom();
+        String nextRoomDescription = objAdventure.getRoomByName(nextRoom).getDescription();
+
+        assertEquals("You are in the east hallway.  You can see Einstein Bros' Bagels and a stairway."
+                , nextRoomDescription);
+    }
+    @Test
+    public void isValidDirectionFromSiebelNorthHallwayToNorthEast() {
+        String roomName = "SiebelNorthHallway";
+        String direction = "noRThEast";
+        String nextRoom = objAdventure.getRoomByName(roomName).getDirectionByName(direction).getRoom();
+        String nextRoomDescription = objAdventure.getRoomByName(nextRoom).getDescription();
+
+        assertEquals("You are in Siebel 1112.  There is space for two code reviews in this room."
+                , nextRoomDescription);
+    }
+    @Test
+    public void testingRandomInput() {
+        String direction = "kdjak";
+        assertEquals("I don't understand 'kdjak'", objGame.inValidInput(direction));
+    }
 }

@@ -1,25 +1,69 @@
 package student.adventure;
 
-// upper case/ lowercase
-// go something
-// how to test?
+/**
+ * Class that holds most of the functionality and helper methods used in Main.java
+ */
 public class Game {
-    static String directionRoomName;
-    static int count = 0;
-    public static String initializeStartingRoom(Adventure adventureExplorer) {
-        return "";
+    /**
+     * Initializes the starting room description based on json file
+     * @param adventureExplorer object of either siebel or libray json used to access rooms and directions
+     * @return returns a string of the starting description
+     */
+    public String initializeStartingRoom(Adventure adventureExplorer) {
+        String startRoom = adventureExplorer.getStartingRoom();
+        String startRoomDescription = adventureExplorer.getRoomByName(startRoom).getDescription();
+        String allDirections =  adventureExplorer.getRoomByName(startRoom).getAllDirectionsCommaSeparated();
+
+        return startRoomDescription + "\n" + "Your journey begins here" +
+                "\n" + "From here you can go: " + allDirections;
     }
 
-    public static boolean isDirectionValidGo(Adventure adventure, String inputDirection) {
+    /**
+     * checks to see if the user input started with "go "
+     * @param inputDirection direction that the user inputs
+     * @return returns true/false if the user input started with "go "
+     */
+    public boolean isDirectionValidGo(String inputDirection) {
         String inputGo = inputDirection.substring(0,3);
-        String inputRest = inputDirection.substring(3,inputDirection.length());
-       // boolean directionExists = adventure.getRoomByName();
         if (inputGo.equalsIgnoreCase("go ")) {
             return true;
         }
         return false;
     }
-    public static String getNextRoomDescription(Adventure adventureExplorer, String directionName) {
-        return "";
+
+    /**
+     * returns a String of the new room based off of the previous room and direction that the user input
+     * @param adventureExplorer object of either siebel or libray json used to access rooms and directions
+     * @param roomName name of the room used to get the next Room
+     * @param directionName direction used that the player inputed to get the nextRoom
+     * @return returns a String of the new room
+     */
+    public String getNextRoom(Adventure adventureExplorer, String roomName, String directionName) {
+        directionName = directionName.substring(3);
+        //returns the room of the next room based off of the previous room and direction that the user input
+        String newRoomName = adventureExplorer.getRoomByName(roomName).getDirectionByName(directionName).getRoom();
+        return newRoomName;
+
+    }
+
+    /**
+     * checks to see if the user input a valid direction
+     * @param directionName name of direction that the user input
+     * @return returns false if the direction inputed by the user is not valid
+     */
+    public boolean isValidDirection(String directionName) {
+        if (!(isDirectionValidGo(directionName))){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * returns the statement printed to console when there is an invalid input
+     * @param inputDirection the invalid input that the user put in which was supposed to be a direction
+     * @return returns a String
+     */
+    public String inValidInput(String inputDirection) {
+        return "I don't understand '" + inputDirection + "'";
     }
 }

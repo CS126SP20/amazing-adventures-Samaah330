@@ -112,17 +112,11 @@ public class Room {
         }
         return null;
     }
-    /*public boolean doesDirectionExist(String directionName) {
-        for (Direction direction: this.directions) {
-            if (direction.getDirectionName().equalsIgnoreCase(directionName)) {
-                return true;
-            }
-        }
-        return false;
-    }
+
+    /**
+     * list of all the directions for the user to pick from
+     * @return returns a String of a list of all the Directions
      */
-
-
     public String getAllDirectionsCommaSeparated() {
         int count = 0;
         String allDirections = "";
