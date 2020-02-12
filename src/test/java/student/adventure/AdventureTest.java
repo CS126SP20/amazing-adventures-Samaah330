@@ -43,7 +43,7 @@ public class AdventureTest {
        String roomName = "SiebelEntry";
        String roomDescription =  objAdventure.getRoomByName(roomName).getDescription();
 
-       assertEquals("You are in the west entry of Siebel Center. You can see the elevator," +
+       assertEquals("You are in the west entry of Siebel Center. You can see the elevator, " +
                "the ACM office, and hallways to the north and east.", roomDescription);
     }
     @Test
