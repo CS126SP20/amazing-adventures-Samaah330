@@ -2,13 +2,10 @@ package student;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import student.adventure.Adventure;
-import student.adventure.Direction;
 import student.adventure.Game;
-import student.adventure.Room;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
+import java.net.URL;
 import java.util.Scanner;
 
 /**
@@ -16,20 +13,28 @@ import java.util.Scanner;
  * @author Samaah Khan
  */
 public class Main {
+    static URL siebelUrl;
+    final static String defaultFileName = "https://courses.grainger.illinois.edu/cs126/sp2020/resources/siebel.json";
     public static void main(String[] args) {
+        // support adding items
+        // support removing items
+        // print items with description of room
         Scanner input = new Scanner(System.in);
         String inputFile = input.nextLine();
         Adventure adventure;
 
         File file = new File(inputFile);
-        String fileName = "src/main/resources/siebel.json"; // final
+        String urlName; //= "src/main/resources/siebel.json"; // final
         // if file does not exist, then default file is siebel json
         if (file.exists()) {
-            fileName =  inputFile;
+            urlName =  inputFile;
+        } else {
+            urlName = defaultFileName;
         }
         try {
-            file = new File(fileName);
-            adventure = new ObjectMapper().readValue(file, Adventure.class);
+            //file = new File(fileName);
+            siebelUrl = new URL(urlName);
+            adventure = new ObjectMapper().readValue(siebelUrl, Adventure.class);
             Game objGame = new Game();
             System.out.println(objGame.initializeStartingRoom(adventure));
             String roomName = adventure.getStartingRoom();

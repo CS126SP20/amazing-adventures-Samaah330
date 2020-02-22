@@ -12,6 +12,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "items",
         "directions"
 })
+/**
+ * keeps track of name, description, items, and directions in json file
+ */
 public class Room {
 
     @JsonProperty("name")
@@ -22,6 +25,10 @@ public class Room {
     private List<String> items = null;
     @JsonProperty("directions")
     private List<Direction> directions = null;
+
+    public Room() {
+
+    }
 
     /**
      *

@@ -86,6 +86,6 @@ public class AdventureTest {
     @Test
     public void testRandomInput() {
         String direction = "kdjak";
-        assertEquals("I don't understand 'kdjak'", objGame.inValidInput(direction));
+        assertEquals("I don't understand 'kdjak'", objGame.isInvalidInput(direction));
     }
 }

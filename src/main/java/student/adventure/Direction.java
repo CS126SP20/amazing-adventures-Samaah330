@@ -9,12 +9,19 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "directionName",
         "room"
 })
+/**
+ *  keeps track of directions and next room in json file
+ */
 public class Direction {
 
     @JsonProperty("directionName")
     private String directionName;
     @JsonProperty("room")
     private String room;
+
+    public Direction() {
+
+    }
 
     /**
      *

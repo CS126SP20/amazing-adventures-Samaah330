@@ -1,7 +1,6 @@
 package student.adventure;
 
 import java.util.List;
-import java.util.Scanner;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -13,6 +12,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "endingRoom",
         "rooms"
 })
+
+/**
+ * Keeps track of starting room, ending room, and array of rooms from json file
+ */
 public class Adventure {
 
     @JsonProperty("startingRoom")
@@ -21,6 +24,10 @@ public class Adventure {
     private String endingRoom;
     @JsonProperty("rooms")
     private List<Room> rooms = null;
+
+    public Adventure() {
+
+    }
 
     /**
      *
