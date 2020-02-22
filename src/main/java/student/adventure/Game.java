@@ -6,13 +6,13 @@ package student.adventure;
 public class Game {
     /**
      * Initializes the starting room description based on json file
-     * @param adventureExplorer object of either siebel or libray json used to access rooms and directions
+     * @param adventure object of either siebel or libray json used to access rooms and directions
      * @return returns a string of the starting description
      */
-    public String initializeStartingRoom(Adventure adventureExplorer) {
-        String startRoom = adventureExplorer.getStartingRoom();
-        String startRoomDescription = adventureExplorer.getRoomByName(startRoom).getDescription();
-        String allDirections =  adventureExplorer.getRoomByName(startRoom).getAllDirectionsCommaSeparated();
+    public String initializeStartingRoom(Adventure adventure) {
+        String startRoom = adventure.getStartingRoom();
+        String startRoomDescription = adventure.getRoomByName(startRoom).getDescription();
+        String allDirections =  adventure.getRoomByName(startRoom).getAllDirectionsCommaSeparated();
 
         return startRoomDescription + "\n" + "Your journey begins here" +
                 "\n" + "From here you can go: " + allDirections;
@@ -33,15 +33,15 @@ public class Game {
 
     /**
      * returns a String of the new room based off of the previous room and direction that the user input
-     * @param adventureExplorer object of either siebel or libray json used to access rooms and directions
+     * @param adventure object of either siebel or libray json used to access rooms and directions
      * @param roomName name of the room used to get the next Room
      * @param directionName direction used that the player inputed to get the nextRoom
      * @return returns a String of the new room
      */
-    public String getNextRoom(Adventure adventureExplorer, String roomName, String directionName) {
+    public String getNextRoom(Adventure adventure, String roomName, String directionName) {
         directionName = directionName.substring(3);
         //returns the room of the next room based off of the previous room and direction that the user input
-        String newRoomName = adventureExplorer.getRoomByName(roomName).getDirectionByName(directionName).getRoom();
+        String newRoomName = adventure.getRoomByName(roomName).getDirectionByName(directionName).getRoom();
         return newRoomName;
 
     }

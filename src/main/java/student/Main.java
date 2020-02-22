@@ -19,7 +19,7 @@ public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         String inputFile = input.nextLine();
-        Adventure adventureExplorer;
+        Adventure adventure;
 
         File file = new File(inputFile);
         String fileName = "src/main/resources/siebel.json"; // final
@@ -29,10 +29,10 @@ public class Main {
         }
         try {
             file = new File(fileName);
-            adventureExplorer = new ObjectMapper().readValue(file, Adventure.class);
+            adventure = new ObjectMapper().readValue(file, Adventure.class);
             Game objGame = new Game();
-            System.out.println(objGame.initializeStartingRoom(adventureExplorer));
-            String roomName = adventureExplorer.getStartingRoom();
+            System.out.println(objGame.initializeStartingRoom(adventure));
+            String roomName = adventure.getStartingRoom();
             while(true) {
                input = new Scanner(System.in);
                String inputDirection = input.nextLine();
@@ -41,16 +41,16 @@ public class Main {
                    System.exit(0);
                } else {
                    if (objGame.isValidDirection(inputDirection)) {
-                       roomName = objGame.getNextRoom(adventureExplorer, roomName, inputDirection);
-                       if (roomName.equals(adventureExplorer.getEndingRoom())) {
+                       roomName = objGame.getNextRoom(adventure, roomName, inputDirection);
+                       if (roomName.equals(adventure.getEndingRoom())) {
                            System.out.println( "You have reached the final room");
                            System.exit(0);
                        }
                        // get description based off of room
-                       if (adventureExplorer.getRoomByName(roomName) != null) {
-                           String descriptionByRoom = adventureExplorer.getRoomByName(roomName).getDescription();
+                       if (adventure.getRoomByName(roomName) != null) {
+                           String descriptionByRoom = adventure.getRoomByName(roomName).getDescription();
                            String directionsToNextRoom = "From here you can go: " +
-                                   adventureExplorer.getRoomByName(roomName).getAllDirectionsCommaSeparated();
+                                   adventure.getRoomByName(roomName).getAllDirectionsCommaSeparated();
                            System.out.println(descriptionByRoom + "\n" + directionsToNextRoom);
                        }
                    } else {
