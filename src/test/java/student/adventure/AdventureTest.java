@@ -24,25 +24,25 @@ public class AdventureTest {
     }
 
     @Test
-    public void GoValidRandomLettersFalse() {
+    public void testGoValidRandomLettersFalse() {
         Boolean isDirectionValid = objGame.isDirectionValidGo("kjla");
         assertEquals(false, isDirectionValid);
     }
 
     @Test
-    public void GoValidNoSpaceFalse() {
+    public void testGoValidNoSpaceFalse() {
         Boolean isDirectionValid = objGame.isDirectionValidGo("goEast");
         assertEquals(false, isDirectionValid);
     }
 
     @Test
-    public void GoValidCaseInsensitiveTrue() {
+    public void testGoValidCaseInsensitiveTrue() {
         Boolean isDirectionValid = objGame.isDirectionValidGo("gO East");
         assertEquals(true, isDirectionValid);
     }
 
     @Test
-    public void RoomDescriptionSiebelEntry() {
+    public void testRoomDescriptionSiebelEntry() {
        String roomName = "SiebelEntry";
        String roomDescription =  objAdventure.getRoomByName(roomName).getDescription();
 
@@ -51,7 +51,7 @@ public class AdventureTest {
     }
 
     @Test
-    public void ValidDirectionFromSiebelEntryToEast() {
+    public void testValidDirectionFromSiebelEntryToEast() {
         String roomName = "SiebelEntry";
         String direction = "eAst";
         String nextRoom = objAdventure.getRoomByName(roomName).getDirectionByName(direction).getRoom();
@@ -62,7 +62,7 @@ public class AdventureTest {
     }
 
     @Test
-    public void ValidDirectionFromSiebelBasementToUp() {
+    public void testValidDirectionFromSiebelBasementToUp() {
         String roomName = "SiebelBasement";
         String direction = "UP";
         String nextRoom = objAdventure.getRoomByName(roomName).getDirectionByName(direction).getRoom();
@@ -73,7 +73,7 @@ public class AdventureTest {
     }
 
     @Test
-    public void ValidDirectionFromSiebelNorthHallwayToNorthEast() {
+    public void testValidDirectionFromSiebelNorthHallwayToNorthEast() {
         String roomName = "SiebelNorthHallway";
         String direction = "noRThEast";
         String nextRoom = objAdventure.getRoomByName(roomName).getDirectionByName(direction).getRoom();
@@ -84,7 +84,7 @@ public class AdventureTest {
     }
 
     @Test
-    public void testingRandomInput() {
+    public void testRandomInput() {
         String direction = "kdjak";
         assertEquals("I don't understand 'kdjak'", objGame.inValidInput(direction));
     }
