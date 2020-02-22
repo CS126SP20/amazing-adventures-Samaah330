@@ -22,7 +22,7 @@ public class Main {
         Adventure adventureExplorer;
 
         File file = new File(inputFile);
-        String fileName = "src/main/resources/siebel.json";
+        String fileName = "src/main/resources/siebel.json"; // final
         // if file does not exist, then default file is siebel json
         if (file.exists()) {
             fileName =  inputFile;
@@ -44,6 +44,7 @@ public class Main {
                        roomName = objGame.getNextRoom(adventureExplorer, roomName, inputDirection);
                        if (roomName.equals(adventureExplorer.getEndingRoom())) {
                            System.out.println( "You have reached the final room");
+                           System.exit(0);
                        }
                        // get description based off of room
                        if (adventureExplorer.getRoomByName(roomName) != null) {

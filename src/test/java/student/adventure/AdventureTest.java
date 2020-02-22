@@ -23,21 +23,25 @@ public class AdventureTest {
         objGame = new Game();
 
     }
+
     @Test
     public void isGoValidRandomLetters() {
         Boolean isDirectionValid = objGame.isDirectionValidGo("kjla");
         assertEquals(false, isDirectionValid);
     }
+
     @Test
     public void isGoValid() {
         Boolean isDirectionValid = objGame.isDirectionValidGo("goEast");
         assertEquals(false, isDirectionValid);
     }
+
     @Test
     public void isGoValid1() {
         Boolean isDirectionValid = objGame.isDirectionValidGo("gO East");
         assertEquals(true, isDirectionValid);
     }
+
     @Test
     public void isRoomDescriptionCorrect() {
        String roomName = "SiebelEntry";
@@ -45,7 +49,8 @@ public class AdventureTest {
 
        assertEquals("You are in the west entry of Siebel Center. You can see the elevator, " +
                "the ACM office, and hallways to the north and east.", roomDescription);
-    }
+    } // add white spaces between tests
+
     @Test
     public void isValidDirectionFromSiebelEntryToEast() {
         String roomName = "SiebelEntry";
@@ -56,6 +61,7 @@ public class AdventureTest {
         assertEquals("You are in the east hallway.  You can see Einstein Bros' Bagels and a stairway."
                 ,nextRoomDescription);
     }
+
     @Test
     public void isValidDirectionFromSiebelBasementToUp() {
         String roomName = "SiebelBasement";
@@ -66,6 +72,7 @@ public class AdventureTest {
         assertEquals("You are in the east hallway.  You can see Einstein Bros' Bagels and a stairway."
                 , nextRoomDescription);
     }
+
     @Test
     public void isValidDirectionFromSiebelNorthHallwayToNorthEast() {
         String roomName = "SiebelNorthHallway";
@@ -76,6 +83,7 @@ public class AdventureTest {
         assertEquals("You are in Siebel 1112.  There is space for two code reviews in this room."
                 , nextRoomDescription);
     }
+
     @Test
     public void testingRandomInput() {
         String direction = "kdjak";
