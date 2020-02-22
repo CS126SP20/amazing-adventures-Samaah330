@@ -63,7 +63,7 @@ public class Game {
      * @param inputDirection the invalid input that the user put in which was supposed to be a direction
      * @return returns a String
      */
-    public String inValidInput(String inputDirection) {
+    public String isInvalidInput(String inputDirection) {
         return "I don't understand '" + inputDirection + "'";
     }
 }

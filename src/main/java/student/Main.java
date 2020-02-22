@@ -54,7 +54,7 @@ public class Main {
                            System.out.println(descriptionByRoom + "\n" + directionsToNextRoom);
                        }
                    } else {
-                       System.out.println(objGame.inValidInput(inputDirection));
+                       System.out.println(objGame.isInvalidInput(inputDirection));
                    }
                }
             }

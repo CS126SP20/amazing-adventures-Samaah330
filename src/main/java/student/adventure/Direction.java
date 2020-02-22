@@ -17,13 +17,6 @@ public class Direction {
     private String room;
 
     /**
-     * No args constructor for use in serialization
-     *
-     */
-    public Direction() {
-    }
-
-    /**
      *
      * @param directionName
      * @param room
@@ -39,29 +32,8 @@ public class Direction {
         return directionName;
     }
 
-    @JsonProperty("directionName")
-    public void setDirectionName(String directionName) {
-        this.directionName = directionName;
-    }
-
-    public Direction withDirectionName(String directionName) {
-        this.directionName = directionName;
-        return this;
-    }
-
     @JsonProperty("room")
     public String getRoom() {
         return room;
     }
-
-    @JsonProperty("room")
-    public void setRoom(String room) {
-        this.room = room;
-    }
-
-    public Direction withRoom(String room) {
-        this.room = room;
-        return this;
-    }
-
 }

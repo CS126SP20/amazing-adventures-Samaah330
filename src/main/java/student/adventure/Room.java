@@ -24,13 +24,6 @@ public class Room {
     private List<Direction> directions = null;
 
     /**
-     * No args constructor for use in serialization
-     *
-     */
-    public Room() {
-    }
-
-    /**
      *
      * @param directions
      * @param name
@@ -50,29 +43,9 @@ public class Room {
         return name;
     }
 
-    @JsonProperty("name")
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Room withName(String name) {
-        this.name = name;
-        return this;
-    }
-
     @JsonProperty("description")
     public String getDescription() {
         return description;
-    }
-
-    @JsonProperty("description")
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Room withDescription(String description) {
-        this.description = description;
-        return this;
     }
 
     @JsonProperty("items")
@@ -95,17 +68,8 @@ public class Room {
         return directions;
     }
 
-    @JsonProperty("directions")
-    public void setDirections(List<Direction> directions) {
-        this.directions = directions;
-    }
-
-    public Room withDirections(List<Direction> directions) {
-        this.directions = directions;
-        return this;
-    }
     public Direction getDirectionByName(String directionName) {
-        for (Direction direction: this.directions) {
+        for (Direction direction: directions) {
             if (direction.getDirectionName().equalsIgnoreCase((directionName))) {
                 return direction;
             }

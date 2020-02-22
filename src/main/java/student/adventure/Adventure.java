@@ -23,13 +23,6 @@ public class Adventure {
     private List<Room> rooms = null;
 
     /**
-     * No args constructor for use in serialization
-     *
-     */
-    public Adventure() {
-    }
-
-    /**
      *
      * @param startingRoom
      * @param rooms
@@ -47,44 +40,14 @@ public class Adventure {
         return startingRoom;
     }
 
-    @JsonProperty("startingRoom")
-    public void setStartingRoom(String startingRoom) {
-        this.startingRoom = startingRoom;
-    }
-
-    public Adventure withStartingRoom(String startingRoom) {
-        this.startingRoom = startingRoom;
-        return this;
-    }
-
     @JsonProperty("endingRoom")
     public String getEndingRoom() {
         return endingRoom;
     }
 
-    @JsonProperty("endingRoom")
-    public void setEndingRoom(String endingRoom) {
-        this.endingRoom = endingRoom;
-    }
-
-    public Adventure withEndingRoom(String endingRoom) {
-        this.endingRoom = endingRoom;
-        return this;
-    }
-
     @JsonProperty("rooms")
     public List<Room> getRooms() {
         return rooms;
-    }
-
-    @JsonProperty("rooms")
-    public void setRooms(List<Room> rooms) {
-        this.rooms = rooms;
-    }
-
-    public Adventure withRooms(List<Room> rooms) {
-        this.rooms = rooms;
-        return this;
     }
 
     /**
