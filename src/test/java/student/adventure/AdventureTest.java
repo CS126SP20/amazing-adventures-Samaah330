@@ -6,22 +6,53 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+
+// checking what was printed to console
+//should I test for other url files
 public class AdventureTest {
     Adventure objAdventure;
     Game objGame;
+    URL url;
 
     @Before
-    public void setUp() {
-        File file = new File("src/main/resources/siebel.json");
+    public void setUp() throws MalformedURLException {
+        url = new URL("https://courses.grainger.illinois.edu/cs126/sp2020/resources/siebel.json");
         try {
-            objAdventure = new ObjectMapper().readValue(file, Adventure.class);
+            objAdventure = new ObjectMapper().readValue(url, Adventure.class);
         } catch (Exception exception) {
-
         }
+
         objGame = new Game();
 
     }
+
+    @Test
+    public void testSiebelURLFile() throws IOException {
+        String startingRoomDescription = objAdventure.getStartingRoom();
+
+        assertEquals("MatthewsStreet", startingRoomDescription);
+    }
+
+    /*@Test // should you check this
+    public void testLibraryURLFile() throws IOException {
+        url = new URL("https://courses.grainger.illinois.edu/cs126/sp2020/resources/library.json");
+        objAdventure = new ObjectMapper().readValue(url, Adventure.class);
+
+        assertEquals();
+    }/*
+
+   /* @Test
+    public void testLibraryURLFile() throws IOException {
+        url = new URL("https://courses.grainger.illinois.edu/cs126/sp2020/resources/kdajlkfj.json");
+        objAdventure = new ObjectMapper().readValue(url, Adventure.class);
+
+        // read what the console says and see if its says "cannot load"
+
+    }*/
 
     @Test
     public void testGoValidRandomLettersFalse() {

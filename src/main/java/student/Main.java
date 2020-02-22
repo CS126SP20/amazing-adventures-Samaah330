@@ -5,6 +5,8 @@ import student.adventure.Adventure;
 import student.adventure.Game;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -63,7 +65,7 @@ public class Main {
                    }
                }
             }
-        } catch(Exception exception) {
+        } catch(IOException exception) {
             System.out.println("cannot load");
             exception.printStackTrace();
         }
