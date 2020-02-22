@@ -1,7 +1,6 @@
 package student.adventure;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
@@ -25,34 +24,34 @@ public class AdventureTest {
     }
 
     @Test
-    public void isGoValidRandomLetters() {
+    public void GoValidRandomLettersFalse() {
         Boolean isDirectionValid = objGame.isDirectionValidGo("kjla");
         assertEquals(false, isDirectionValid);
     }
 
     @Test
-    public void isGoValid() {
+    public void GoValidNoSpaceFalse() {
         Boolean isDirectionValid = objGame.isDirectionValidGo("goEast");
         assertEquals(false, isDirectionValid);
     }
 
     @Test
-    public void isGoValid1() {
+    public void GoValidCaseInsensitiveTrue() {
         Boolean isDirectionValid = objGame.isDirectionValidGo("gO East");
         assertEquals(true, isDirectionValid);
     }
 
     @Test
-    public void isRoomDescriptionCorrect() {
+    public void RoomDescriptionSiebelEntry() {
        String roomName = "SiebelEntry";
        String roomDescription =  objAdventure.getRoomByName(roomName).getDescription();
 
        assertEquals("You are in the west entry of Siebel Center. You can see the elevator, " +
                "the ACM office, and hallways to the north and east.", roomDescription);
-    } // add white spaces between tests
+    }
 
     @Test
-    public void isValidDirectionFromSiebelEntryToEast() {
+    public void ValidDirectionFromSiebelEntryToEast() {
         String roomName = "SiebelEntry";
         String direction = "eAst";
         String nextRoom = objAdventure.getRoomByName(roomName).getDirectionByName(direction).getRoom();
@@ -63,7 +62,7 @@ public class AdventureTest {
     }
 
     @Test
-    public void isValidDirectionFromSiebelBasementToUp() {
+    public void ValidDirectionFromSiebelBasementToUp() {
         String roomName = "SiebelBasement";
         String direction = "UP";
         String nextRoom = objAdventure.getRoomByName(roomName).getDirectionByName(direction).getRoom();
@@ -74,7 +73,7 @@ public class AdventureTest {
     }
 
     @Test
-    public void isValidDirectionFromSiebelNorthHallwayToNorthEast() {
+    public void ValidDirectionFromSiebelNorthHallwayToNorthEast() {
         String roomName = "SiebelNorthHallway";
         String direction = "noRThEast";
         String nextRoom = objAdventure.getRoomByName(roomName).getDirectionByName(direction).getRoom();
