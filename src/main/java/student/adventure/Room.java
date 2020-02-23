@@ -84,8 +84,8 @@ public class Room {
         for (String items: items) {
             if (count == 0) {
                 allItems += items;
-            } else if (count == directions.size() - 1) {
-                allItems += " or " + items;
+            } else if (count == getItems().size() - 1) {
+                allItems += " and " + items;
             } else {
                 allItems += ", " + items;
             }
@@ -110,7 +110,8 @@ public class Room {
     public String getAllDirectionsCommaSeparated() {
         int count = 0;
         String allDirections = "";
-        for (Direction direction: this.directions) {
+
+        for (Direction direction: directions) {
             if (count == 0) {
                 allDirections += direction.getDirectionName();
             } else if (count == directions.size() - 1) {

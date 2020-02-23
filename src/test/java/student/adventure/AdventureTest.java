@@ -96,6 +96,54 @@ public class AdventureTest {
     }
 
     @Test
+    public void testCorrectItemsSiebelEntry() {
+        String items =  objAdventure.getRoomByName("SiebelEntry").getItemsCommaSeperated();
+        assertEquals("sweatshirt and key", items);
+    }
+
+    @Test
+    public void testCorrecctItemsMathewStreet() {
+        String items =  objAdventure.getRoomByName("MatthewsStreet").getItemsCommaSeperated();
+        assertEquals("coin", items);
+    }
+
+    @Test
+    public void testCorrectItemsAcmOffice() {
+        String items =  objAdventure.getRoomByName("AcmOffice").getItemsCommaSeperated();
+        assertEquals("pizza and swag", items);
+    }
+
+    @Test
+    public void testNoItemsSiebelNorthHallway() {
+        String items =  objAdventure.getRoomByName("SiebelNorthHallway").getItemsCommaSeperated();
+        assertEquals("No Items", items);
+    }
+
+    @Test
+    public void testCorrectItemsSiebel1112() {
+        String items =  objAdventure.getRoomByName("Siebel1112").getItemsCommaSeperated();
+        assertEquals("USB-C connector and grading rubric", items);
+    }
+
+    @Test
+    public void testCorrectItemsSiebelEastHallway() {
+        String items =  objAdventure.getRoomByName("SiebelEastHallway").getItemsCommaSeperated();
+        assertEquals("bagel and coffee", items);
+    }
+
+    @Test
+    public void testCorrectItemsSiebel1314() {
+        String items =  objAdventure.getRoomByName("Siebel1314").getItemsCommaSeperated();
+        assertEquals("No Items", items);
+    }
+
+    @Test
+    public void testCorrectItemsSiebelBasement() {
+        String items =  objAdventure.getRoomByName("SiebelBasement").getItemsCommaSeperated();
+        assertEquals("pencil", items);
+    }
+
+    @Test
     public void testGoValidRandomLettersFalse() {
         Boolean isDirectionValid = objGame.isDirectionValidGo("kjla");
         assertEquals(false, isDirectionValid);
