@@ -4,14 +4,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
+
 
 /**
  * Class that holds most of the functionality and helper methods used in Main.java
  */
 public class Game {
+
+
+    PrintStream stream = new PrintStream(System.out);
 
     /** url that processes json */
     static File file;
@@ -39,7 +44,7 @@ public class Game {
     public void printDescriptionsAndDirections() throws IOException {
         file = new File(getFileName());
         adventure = new ObjectMapper().readValue(file, Adventure.class);
-        System.out.println(initializeStartingRoom());
+        stream.println(initializeStartingRoom());
         String roomName = adventure.getStartingRoom();
         while(true) {
             input = new Scanner(System.in);
@@ -51,7 +56,7 @@ public class Game {
                 if (isValidDirection(inputDirection)) {
                     roomName = getNextRoom(adventure, roomName, inputDirection);
                     if (roomName.equals(adventure.getEndingRoom())) {
-                        System.out.println( "You have reached the final room");
+                        stream.println( "You have reached the final room");
                         System.exit(1);
                     }
                     // get description based off of room
@@ -59,15 +64,25 @@ public class Game {
                         String descriptionByRoom = adventure.getRoomByName(roomName).getDescription();
                         String directionsToNextRoom = "From here you can go: " +
                                 adventure.getRoomByName(roomName).getAllDirectionsCommaSeparated();
-                        System.out.println(descriptionByRoom + "\n" + directionsToNextRoom);
+                        stream.println(descriptionByRoom + "\n" + directionsToNextRoom);
                     }
                 } else {
-                    System.out.println(isInvalidInput(inputDirection));
+                   stream.println(isInvalidInput(inputDirection));
                 }
             }
         }
     }
 
+    //psuedocode for items:
+    // TODO:   // support adding items
+    //        // support removing items
+    //        // print items with description of room
+    //        // make items teleportable
+
+    // Items visible: show items ( with the rest of the descriptions)
+    // if you type "add laptop" then it redoes description with new items visible
+    // remove items too (if item doesnt exist say that)
+    // if ("teleport item to roomName") --> remove item and add them to the items in that room name
     public String getFileName() {
         String inputFile = input.nextLine();
         file = new File(inputFile);
