@@ -18,11 +18,16 @@ public class Game {
 
     PrintStream stream = new PrintStream(System.out);
 
-    /** url that processes json */
+    /** file that processes json */
     static File file;
 
-    /** default URL used if user does not input valid URL */
-    final static String defaultFile = "src/main/resources/siebel.json";
+    static URL url;
+
+    /** default file used if user does not input valid file or url */
+    final static String siebelFile = "src/main/resources/siebel.json";
+
+    /** url */
+    final static String siebelURL = "https://courses.grainger.illinois.edu/cs126/sp2020/resources/siebel.json";
 
     /** instance of Adventure class*/
     Adventure adventure;
@@ -44,7 +49,7 @@ public class Game {
     public void printDescriptionsAndDirections() throws IOException {
         file = new File(getFileName());
         adventure = new ObjectMapper().readValue(file, Adventure.class);
-        stream.println(initializeStartingRoom());
+        initializeStartingRoom();
         String roomName = adventure.getStartingRoom();
         while(true) {
             input = new Scanner(System.in);
@@ -83,25 +88,30 @@ public class Game {
     // if you type "add laptop" then it redoes description with new items visible
     // remove items too (if item doesnt exist say that)
     // if ("teleport item to roomName") --> remove item and add them to the items in that room name
+
     public String getFileName() {
         String inputFile = input.nextLine();
+
+        if (inputFile.equals(siebelURL)) {
+            return siebelFile;
+        }
         file = new File(inputFile);
         if (file.exists()) {
             return inputFile;
         }
-        return defaultFile;
+        return siebelFile;
     }
     /**
      * Initializes the starting room description based on json file
      * @return returns a string of the starting description
      */
-    public String initializeStartingRoom() {
+    public void initializeStartingRoom() {
         String startRoom = adventure.getStartingRoom();
         String startRoomDescription = adventure.getRoomByName(startRoom).getDescription();
         String allDirections =  adventure.getRoomByName(startRoom).getAllDirectionsCommaSeparated();
 
-        return startRoomDescription + "\n" + "Your journey begins here" +
-                "\n" + "From here you can go: " + allDirections;
+        stream.println(startRoomDescription + "\n" + "Your journey begins here" +
+                "\n" + "From here you can go: " + allDirections);
     }
 
     /**
