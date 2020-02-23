@@ -4,56 +4,96 @@ import static org.junit.Assert.assertEquals;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import java.io.File;
-import java.io.IOException;
+
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Scanner;
 
 
-// checking what was printed to console
-//should I test for other url files
-// checking to see if url exists
+// checking what was printed to console/ printstream
+// how to check if a url exists
 public class AdventureTest {
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+
+    //private final PrintStream originalOut = System.out;
+    //private final PrintStream originalErr = System.err;
+
+   // String inputFile;
+
+    //Scanner input = new Scanner(System.in);
+
     Adventure objAdventure;
     Game objGame;
-    URL url;
+    File file;
 
     @Before
     public void setUp() throws MalformedURLException {
-        url = new URL("https://courses.grainger.illinois.edu/cs126/sp2020/resources/siebel.json");
+       // inputFile = input.nextLine();
+
+        System.setOut(new PrintStream(outContent));
+        System.setErr(new PrintStream(errContent));
+
+        file = new File("src/main/resources/siebel.json");
         try {
-            objAdventure = new ObjectMapper().readValue(url, Adventure.class);
+            objAdventure = new ObjectMapper().readValue(file, Adventure.class);
         } catch (Exception exception) {
+
         }
-
         objGame = new Game();
+    }
 
+  /* @Test
+    public void testSiebelFile() {
+        String input = "kdja";
+        System.setIn( new ByteArrayInputStream(input.getBytes()));
+         //ByteArrayInputStream inputContent = new ByteArrayInputStream();
+        //objGame.getFileName();
+
+        assertEquals("src/main/resources/siebel.json", objGame.getFileName());
+        /*assertEquals("You are on Matthews, outside the Siebel Center \n" +
+                    "Your journey begins here \n" +
+                    "From here you can go: East", outContent.toString());
+    }*/
+
+  //  @Rule
+   // public final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
+
+
+    @Test
+    public void testRandomFile() {
+        String input = "kdja";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        objGame = new Game();
+        assertEquals("src/main/resources/siebel.json", objGame.getFileName());
     }
 
     @Test
-    public void testSiebelURLFile() throws IOException {
-        String startingRoomDescription = objAdventure.getStartingRoom();
-
-        assertEquals("MatthewsStreet", startingRoomDescription);
+    public void testLibraryFile() {
+        String input = "src/main/resources/library.json";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        objGame = new Game();
+        assertEquals("src/main/resources/library.json", objGame.getFileName());
     }
 
-    /*@Test // should you check this
-    public void testLibraryURLFile() throws IOException {
-        url = new URL("https://courses.grainger.illinois.edu/cs126/sp2020/resources/library.json");
-        objAdventure = new ObjectMapper().readValue(url, Adventure.class);
+    @Test
+    public void testSiebelFile() {
+        String input = "src/main/resources/siebel.json";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        objGame = new Game();
+        assertEquals("src/main/resources/siebel.json", objGame.getFileName());
+    }
 
-        assertEquals();
-    }/*
-
-   /* @Test
-    public void testLibraryURLFile() throws IOException {
-        url = new URL("https://courses.grainger.illinois.edu/cs126/sp2020/resources/kdajlkfj.json");
-        objAdventure = new ObjectMapper().readValue(url, Adventure.class);
-
-        // read what the console says and see if its says "cannot load"
-
-    }*/
+    @Test
+    public void testSiebelURL() {
+        String input = "https://courses.grainger.illinois.edu/cs126/sp2020/resources/siebel.json";
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+        objGame = new Game();
+        assertEquals("src/main/resources/siebel.json", objGame.getFileName());
+    }
 
     @Test
     public void testGoValidRandomLettersFalse() {
@@ -73,6 +113,7 @@ public class AdventureTest {
         assertEquals(true, isDirectionValid);
     }
 
+    // test every possible direction
     @Test
     public void testRoomDescriptionSiebelEntry() {
        String roomName = "SiebelEntry";
