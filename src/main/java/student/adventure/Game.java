@@ -54,26 +54,23 @@ public class Game {
         while(true) {
             input = new Scanner(System.in);
             String inputDirection = input.nextLine();
-            if (inputDirection.equalsIgnoreCase("QUIT") ||
-                    inputDirection.equalsIgnoreCase("EXIT")) {
-                System.exit(1);
-            } else {
-                if (isValidDirection(inputDirection)) {
-                    roomName = getNextRoom(adventure, roomName, inputDirection);
-                    if (roomName.equals(adventure.getEndingRoom())) {
-                        stream.println( "You have reached the final room");
-                        System.exit(1);
-                    }
-                    // get description based off of room
-                    if (adventure.getRoomByName(roomName) != null) {
-                        String descriptionByRoom = adventure.getRoomByName(roomName).getDescription();
-                        String directionsToNextRoom = "From here you can go: " +
-                                adventure.getRoomByName(roomName).getAllDirectionsCommaSeparated();
-                        stream.println(descriptionByRoom + "\n" + directionsToNextRoom);
-                    }
-                } else {
-                   stream.println(isInvalidInput(inputDirection));
+            exitProgramQuitExit(inputDirection);
+            if (isValidDirection(inputDirection)) {
+                roomName = getNextRoom(adventure, roomName, inputDirection);
+                if (roomName.equals(adventure.getEndingRoom())) {
+                    stream.println( "You have reached the final room");
+                    System.exit(1);
                 }
+                // get description based off of room
+                if (adventure.getRoomByName(roomName) != null) {
+                    String descriptionByRoom = adventure.getRoomByName(roomName).getDescription();
+                    String directionsToNextRoom = "From here you can go: " +
+                            adventure.getRoomByName(roomName).getAllDirectionsCommaSeparated();
+                    String items = "Items visible: " + adventure.getRoomByName(roomName).getItemsCommaSeperated();
+                    stream.println(descriptionByRoom + "\n" + directionsToNextRoom + "\n" + items);
+                }
+            } else {
+                stream.println(isInvalidInput(inputDirection));
             }
         }
     }
@@ -101,6 +98,13 @@ public class Game {
         }
         return siebelFile;
     }
+
+    public void exitProgramQuitExit(String inputDirection) {
+        if (inputDirection.equalsIgnoreCase("QUIT") ||
+                inputDirection.equalsIgnoreCase("EXIT")) {
+            System.exit(1);
+        }
+    }
     /**
      * Initializes the starting room description based on json file
      * @return returns a string of the starting description
@@ -108,10 +112,11 @@ public class Game {
     public void initializeStartingRoom() {
         String startRoom = adventure.getStartingRoom();
         String startRoomDescription = adventure.getRoomByName(startRoom).getDescription();
-        String allDirections =  adventure.getRoomByName(startRoom).getAllDirectionsCommaSeparated();
+        String allDirections = adventure.getRoomByName(startRoom).getAllDirectionsCommaSeparated();
+        String allItems = adventure.getRoomByName(startRoom).getItemsCommaSeperated();
 
         stream.println(startRoomDescription + "\n" + "Your journey begins here" +
-                "\n" + "From here you can go: " + allDirections);
+                "\n" + "From here you can go: " + allDirections + "\n" + "Items Visible: " + allItems);
     }
 
     /**

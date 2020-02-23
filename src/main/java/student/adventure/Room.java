@@ -75,6 +75,25 @@ public class Room {
         return directions;
     }
 
+    public String getItemsCommaSeperated() {
+        int count = 0;
+        String allItems = "";
+        if (items == null) {
+            return "No Items";
+        }
+        for (String items: items) {
+            if (count == 0) {
+                allItems += items;
+            } else if (count == directions.size() - 1) {
+                allItems += " or " + items;
+            } else {
+                allItems += ", " + items;
+            }
+            count++;
+        }
+        return allItems;
+    }
+
     public Direction getDirectionByName(String directionName) {
         for (Direction direction: directions) {
             if (direction.getDirectionName().equalsIgnoreCase((directionName))) {
