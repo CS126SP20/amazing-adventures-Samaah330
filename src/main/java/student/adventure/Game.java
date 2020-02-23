@@ -29,38 +29,42 @@ public class Game {
      */
     public void runGame() throws MalformedURLException {
         try {
-            file = new File(getFileName());
-            adventure = new ObjectMapper().readValue(file, Adventure.class);
-            System.out.println(initializeStartingRoom(adventure));
-            String roomName = adventure.getStartingRoom();
-            while(true) {
-                input = new Scanner(System.in);
-                String inputDirection = input.nextLine();
-                if (inputDirection.equalsIgnoreCase("QUIT") ||
-                        inputDirection.equalsIgnoreCase("EXIT")) {
-                    System.exit(0);
-                } else {
-                    if (isValidDirection(inputDirection)) {
-                        roomName = getNextRoom(adventure, roomName, inputDirection);
-                        if (roomName.equals(adventure.getEndingRoom())) {
-                            System.out.println( "You have reached the final room");
-                            System.exit(0);
-                        }
-                        // get description based off of room
-                        if (adventure.getRoomByName(roomName) != null) {
-                            String descriptionByRoom = adventure.getRoomByName(roomName).getDescription();
-                            String directionsToNextRoom = "From here you can go: " +
-                                    adventure.getRoomByName(roomName).getAllDirectionsCommaSeparated();
-                            System.out.println(descriptionByRoom + "\n" + directionsToNextRoom);
-                        }
-                    } else {
-                        System.out.println(isInvalidInput(inputDirection));
-                    }
-                }
-            }
+            printDescriptionsAndDirections();
         } catch(IOException exception) {
             System.out.println("cannot load");
             exception.printStackTrace();
+        }
+    }
+
+    public void printDescriptionsAndDirections() throws IOException {
+        file = new File(getFileName());
+        adventure = new ObjectMapper().readValue(file, Adventure.class);
+        System.out.println(initializeStartingRoom());
+        String roomName = adventure.getStartingRoom();
+        while(true) {
+            input = new Scanner(System.in);
+            String inputDirection = input.nextLine();
+            if (inputDirection.equalsIgnoreCase("QUIT") ||
+                    inputDirection.equalsIgnoreCase("EXIT")) {
+                System.exit(1);
+            } else {
+                if (isValidDirection(inputDirection)) {
+                    roomName = getNextRoom(adventure, roomName, inputDirection);
+                    if (roomName.equals(adventure.getEndingRoom())) {
+                        System.out.println( "You have reached the final room");
+                        System.exit(1);
+                    }
+                    // get description based off of room
+                    if (adventure.getRoomByName(roomName) != null) {
+                        String descriptionByRoom = adventure.getRoomByName(roomName).getDescription();
+                        String directionsToNextRoom = "From here you can go: " +
+                                adventure.getRoomByName(roomName).getAllDirectionsCommaSeparated();
+                        System.out.println(descriptionByRoom + "\n" + directionsToNextRoom);
+                    }
+                } else {
+                    System.out.println(isInvalidInput(inputDirection));
+                }
+            }
         }
     }
 
@@ -74,10 +78,9 @@ public class Game {
     }
     /**
      * Initializes the starting room description based on json file
-     * @param adventure object of either siebel or libray json used to access rooms and directions
      * @return returns a string of the starting description
      */
-    public String initializeStartingRoom(Adventure adventure) {
+    public String initializeStartingRoom() {
         String startRoom = adventure.getStartingRoom();
         String startRoomDescription = adventure.getRoomByName(startRoom).getDescription();
         String allDirections =  adventure.getRoomByName(startRoom).getAllDirectionsCommaSeparated();
