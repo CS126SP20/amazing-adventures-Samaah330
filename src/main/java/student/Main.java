@@ -7,6 +7,7 @@ import student.adventure.Game;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -15,29 +16,31 @@ import java.util.Scanner;
  * @author Samaah Khan
  */
 public class Main {
-    static URL siebelUrl;
-    final static String defaultFileName = "https://courses.grainger.illinois.edu/cs126/sp2020/resources/siebel.json";
-    public static void main(String[] args) {
+
+    public static void main(String[] arg) throws MalformedURLException {
+
+        Game game = new Game();
+        game.runGame();
+
         // support adding items
         // support removing items
         // print items with description of room
-        Scanner input = new Scanner(System.in);
+        // make items teleportable
+       /* Scanner input = new Scanner(System.in);
         String inputFile = input.nextLine();
         Adventure adventure;
+        Game objGame = new Game();
 
         File file = new File(inputFile);
-        String urlName; //= "src/main/resources/siebel.json"; // final
-        // if file does not exist, then default file is siebel json
+        String urlName;
         if (file.exists()) {
             urlName =  inputFile;
         } else {
-            urlName = defaultFileName;
+            urlName = defaultURL;
         }
         try {
-            //file = new File(fileName);
-            siebelUrl = new URL(urlName);
-            adventure = new ObjectMapper().readValue(siebelUrl, Adventure.class);
-            Game objGame = new Game();
+            url = new URL(urlName);
+            adventure = new ObjectMapper().readValue(url, Adventure.class);
             System.out.println(objGame.initializeStartingRoom(adventure));
             String roomName = adventure.getStartingRoom();
             while(true) {
@@ -68,6 +71,6 @@ public class Main {
         } catch(IOException exception) {
             System.out.println("cannot load");
             exception.printStackTrace();
-        }
+        }*/
     }
 }

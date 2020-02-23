@@ -13,6 +13,7 @@ import java.net.URL;
 
 // checking what was printed to console
 //should I test for other url files
+// checking to see if url exists
 public class AdventureTest {
     Adventure objAdventure;
     Game objGame;

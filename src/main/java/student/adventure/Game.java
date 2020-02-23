@@ -1,9 +1,77 @@
 package student.adventure;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Scanner;
+
 /**
  * Class that holds most of the functionality and helper methods used in Main.java
  */
 public class Game {
+
+    /** url that processes json */
+    static File file;
+
+    /** default URL used if user does not input valid URL */
+    final static String defaultFile = "src/main/resources/siebel.json";
+
+    /** instance of Adventure class*/
+    Adventure adventure;
+
+    Scanner input = new Scanner(System.in);
+
+    /**
+     * runs game
+     */
+    public void runGame() throws MalformedURLException {
+        try {
+            file = new File(getFileName());
+            adventure = new ObjectMapper().readValue(file, Adventure.class);
+            System.out.println(initializeStartingRoom(adventure));
+            String roomName = adventure.getStartingRoom();
+            while(true) {
+                input = new Scanner(System.in);
+                String inputDirection = input.nextLine();
+                if (inputDirection.equalsIgnoreCase("QUIT") ||
+                        inputDirection.equalsIgnoreCase("EXIT")) {
+                    System.exit(0);
+                } else {
+                    if (isValidDirection(inputDirection)) {
+                        roomName = getNextRoom(adventure, roomName, inputDirection);
+                        if (roomName.equals(adventure.getEndingRoom())) {
+                            System.out.println( "You have reached the final room");
+                            System.exit(0);
+                        }
+                        // get description based off of room
+                        if (adventure.getRoomByName(roomName) != null) {
+                            String descriptionByRoom = adventure.getRoomByName(roomName).getDescription();
+                            String directionsToNextRoom = "From here you can go: " +
+                                    adventure.getRoomByName(roomName).getAllDirectionsCommaSeparated();
+                            System.out.println(descriptionByRoom + "\n" + directionsToNextRoom);
+                        }
+                    } else {
+                        System.out.println(isInvalidInput(inputDirection));
+                    }
+                }
+            }
+        } catch(IOException exception) {
+            System.out.println("cannot load");
+            exception.printStackTrace();
+        }
+    }
+
+    public String getFileName() {
+        String inputFile = input.nextLine();
+        file = new File(inputFile);
+        if (file.exists()) {
+            return inputFile;
+        }
+        return defaultFile;
+    }
     /**
      * Initializes the starting room description based on json file
      * @param adventure object of either siebel or libray json used to access rooms and directions
