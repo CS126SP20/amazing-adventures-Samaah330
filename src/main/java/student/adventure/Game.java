@@ -57,10 +57,7 @@ public class Game {
             exitProgramQuitExit(inputDirection);
             if (isValidDirection(inputDirection)) {
                 roomName = getNextRoom(adventure, roomName, inputDirection);
-                if (roomName.equals(adventure.getEndingRoom())) {
-                    stream.println( "You have reached the final room");
-                    System.exit(1);
-                }
+                reachedEndingRoom(roomName);
                 // get description based off of room
                 if (adventure.getRoomByName(roomName) != null) {
                     String descriptionByRoom = adventure.getRoomByName(roomName).getDescription();
@@ -78,7 +75,6 @@ public class Game {
     //psuedocode for items:
     // TODO:   // support adding items
     //        // support removing items
-    //        // print items with description of room
     //        // make items teleportable
 
     // Items visible: show items ( with the rest of the descriptions)
@@ -99,12 +95,23 @@ public class Game {
         return siebelFile;
     }
 
+    public void addItems() {
+
+    }
+
+    public void reachedEndingRoom(String roomName) {
+        if (roomName.equals(adventure.getEndingRoom())) {
+            stream.println( "You have reached the final room");
+            System.exit(1);
+        }
+    }
     public void exitProgramQuitExit(String inputDirection) {
         if (inputDirection.equalsIgnoreCase("QUIT") ||
                 inputDirection.equalsIgnoreCase("EXIT")) {
             System.exit(1);
         }
     }
+
     /**
      * Initializes the starting room description based on json file
      * @return returns a string of the starting description
