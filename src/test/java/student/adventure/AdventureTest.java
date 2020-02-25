@@ -143,7 +143,7 @@ public class AdventureTest {
         assertEquals("pencil", items);
     }
 
-    @Test
+   @Test
     public void testGoValidRandomLettersFalse() {
         Boolean isDirectionValid = objGame.isDirectionValidGo("kjla");
         assertEquals(false, isDirectionValid);

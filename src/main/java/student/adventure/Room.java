@@ -91,6 +91,9 @@ public class Room {
             }
             count++;
         }
+        if (allItems.equals("")) {
+            return "No Items";
+        }
         return allItems;
     }
 

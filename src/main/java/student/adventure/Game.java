@@ -57,6 +57,8 @@ public class Game {
             exitProgramQuitExit(inputDirection);
             if (isValidAddItem(inputDirection)) {
                 addItems(inputDirection, roomName);
+            } else if (isValidRemoveItem(inputDirection)) {
+                removeItems(inputDirection, roomName);
             } else if (isValidDirection(inputDirection)) {
                 roomName = getNextRoom(adventure, roomName, inputDirection);
                 reachedEndingRoom(roomName);
@@ -102,6 +104,16 @@ public class Game {
         stream.println("Items Visible: " + adventure.getRoomByName(roomName).getItemsCommaSeperated());
     }
 
+    public void removeItems(String input, String roomName) {
+        String item = input.substring(7);
+        if (adventure.getRoomByName(roomName).getItems().contains(item)) {
+            adventure.getRoomByName(roomName).getItems().remove(item);
+            stream.println("Items Visible: " + adventure.getRoomByName(roomName).getItemsCommaSeperated());
+        } else {
+            stream.println(item + " does not exist in this room");
+        }
+    }
+
     public void reachedEndingRoom(String roomName) {
         if (roomName.equals(adventure.getEndingRoom())) {
             stream.println( "You have reached the final room");
@@ -144,6 +156,11 @@ public class Game {
         String inputAdd = input.substring(0,4);
         return inputAdd.equalsIgnoreCase("add ");
     }
+
+    public boolean isValidRemoveItem(String input) {
+        String inputRemove = input.substring(0,7);
+        return inputRemove.equalsIgnoreCase("remove ");
+    }
     /**
      * returns a String of the new room based off of the previous room and direction that the user input
      * @param adventure object of either siebel or libray json used to access rooms and directions
@@ -154,8 +171,6 @@ public class Game {
     public String getNextRoom(Adventure adventure, String roomName, String directionName) {
         directionName = directionName.substring(3);
         //returns the room of the next room based off of the previous room and direction that the user input
-        stream.println(roomName);
-        stream.println(directionName);
         String newRoomName = adventure.getRoomByName(roomName).getDirectionByName(directionName).getRoom();
         return newRoomName;
     }
