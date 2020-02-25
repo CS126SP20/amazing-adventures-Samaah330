@@ -15,27 +15,30 @@ import java.util.Scanner;
  */
 public class Game {
 
-
+    /** PrintStream used print to console*/
     PrintStream stream = new PrintStream(System.out);
 
-    /** file that processes json */
+    /** File that processes json */
     static File file;
 
+    /** Url that processes json */
     static URL url;
 
-    /** default file used if user does not input valid file or url */
+    /** Default file used if user does not input valid file or url */
     final static String siebelFile = "src/main/resources/siebel.json";
 
-    /** url */
+    /** Url for Siebel */
     final static String siebelURL = "https://courses.grainger.illinois.edu/cs126/sp2020/resources/siebel.json";
 
-    /** instance of Adventure class*/
+    /** Instance of Adventure class*/
     Adventure adventure;
 
+    /** Scanner for user input */
     Scanner input = new Scanner(System.in);
 
     /**
-     * runs game
+     *
+     * @throws MalformedURLException
      */
     public void runGame() throws MalformedURLException {
         try {
@@ -46,6 +49,10 @@ public class Game {
         }
     }
 
+    /**
+     *
+     * @throws IOException
+     */
     public void printDescriptionsAndDirections() throws IOException {
         file = new File(getFileName());
         adventure = new ObjectMapper().readValue(file, Adventure.class);
@@ -55,7 +62,9 @@ public class Game {
             input = new Scanner(System.in);
             String inputDirection = input.nextLine();
             exitProgramQuitExit(inputDirection);
-            if (isValidAddItem(inputDirection)) {
+            if (inputDirection.equalsIgnoreCase("teleport")) {
+                teleportItems(roomName);
+            } else if (isValidAddItem(inputDirection)) {
                 addItems(inputDirection, roomName);
             } else if (isValidRemoveItem(inputDirection)) {
                 removeItems(inputDirection, roomName);
@@ -75,16 +84,10 @@ public class Game {
         }
     }
 
-    //psuedocode for items:
-    // TODO:   // support adding items
-    //        // support removing items
-    //        // make items teleportable
-
-    // Items visible: show items ( with the rest of the descriptions)
-    // if you type "add laptop" then it redoes description with new items visible
-    // remove items too (if item doesnt exist say that)
-    // if ("teleport item to roomName") --> remove item and add them to the items in that room name
-
+    /**
+     *
+     * @return
+     */
     public String getFileName() {
         String inputFile = input.nextLine();
 
@@ -98,12 +101,22 @@ public class Game {
         return siebelFile;
     }
 
+    /**
+     *
+     * @param input
+     * @param roomName
+     */
     public void addItems(String input, String roomName) {
         String item = input.substring(4);
         adventure.getRoomByName(roomName).getItems().add(item);
         stream.println("Items Visible: " + adventure.getRoomByName(roomName).getItemsCommaSeperated());
     }
 
+    /**
+     *
+     * @param input
+     * @param roomName
+     */
     public void removeItems(String input, String roomName) {
         String item = input.substring(7);
         if (adventure.getRoomByName(roomName).getItems().contains(item)) {
@@ -114,6 +127,45 @@ public class Game {
         }
     }
 
+    /**
+     *
+     * @param roomName
+     */
+    public void teleportItems(String roomName) {
+        stream.println("which item would you like to teleport?");
+
+        input = new Scanner(System.in);
+        String inputItem = input.nextLine();
+
+        while (!adventure.getRoomByName(roomName).getItems().contains(inputItem)) {
+            stream.println(inputItem + " does not exist in this room for you to teleport." + "\n" +
+                    "Please pick another item.");
+            input = new Scanner(System.in);
+            inputItem = input.nextLine();
+        }
+
+        stream.println("where would you like to teleport " + inputItem + "?");
+        input = new Scanner(System.in);
+        String inputRoom = input.nextLine();
+        stream.println(inputRoom);
+
+        // doesnt work because get rooms returns an object and that object is not equal to the string
+        while (adventure.getRoomByName(inputRoom) == null) {
+            stream.println(inputRoom + " does not exist. Please teleport " + inputItem + " to another room");
+            input = new Scanner(System.in);
+            inputRoom = input.nextLine();
+        }
+
+        adventure.getRoomByName(roomName).getItems().remove(inputItem);
+        adventure.getRoomByName(inputRoom).getItems().add(inputItem);
+
+        stream.println(inputItem + " has been teleported " + "to " + inputRoom);
+    }
+
+    /**
+     *
+     * @param roomName
+     */
     public void reachedEndingRoom(String roomName) {
         if (roomName.equals(adventure.getEndingRoom())) {
             stream.println( "You have reached the final room");
@@ -121,6 +173,10 @@ public class Game {
         }
     }
 
+    /**
+     *
+     * @param inputDirection
+     */
     public void exitProgramQuitExit(String inputDirection) {
         if (inputDirection.equalsIgnoreCase("QUIT") ||
                 inputDirection.equalsIgnoreCase("EXIT")) {
@@ -152,15 +208,26 @@ public class Game {
         return inputGo.equalsIgnoreCase("go ");
     }
 
+    /**
+     *
+     * @param input
+     * @return
+     */
     public boolean isValidAddItem(String input) {
         String inputAdd = input.substring(0,4);
         return inputAdd.equalsIgnoreCase("add ");
     }
 
+    /**
+     *
+     * @param input
+     * @return
+     */
     public boolean isValidRemoveItem(String input) {
         String inputRemove = input.substring(0,7);
         return inputRemove.equalsIgnoreCase("remove ");
     }
+
     /**
      * returns a String of the new room based off of the previous room and direction that the user input
      * @param adventure object of either siebel or libray json used to access rooms and directions
@@ -188,9 +255,10 @@ public class Game {
     }
 
     /**
-     * returns the statement printed to console when there is an invalid input
-     * @param inputDirection the invalid input that the user put in which was supposed to be a direction
-     * @return returns a String
+     * Returns the statement printed to console when there is an invalid input
+     * @param inputDirection The invalid input that the user put in which is supposed to be
+     *                       either teleport, add, remove, or a direction
+     * @return Returns a String
      */
     public String isInvalidInput(String inputDirection) {
         return "I don't understand '" + inputDirection + "'";
