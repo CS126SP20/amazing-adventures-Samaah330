@@ -55,10 +55,11 @@ public class Game {
             input = new Scanner(System.in);
             String inputDirection = input.nextLine();
             exitProgramQuitExit(inputDirection);
-            if (isValidDirection(inputDirection)) {
+            if (isValidAddItem(inputDirection)) {
+                addItems(inputDirection, roomName);
+            } else if (isValidDirection(inputDirection)) {
                 roomName = getNextRoom(adventure, roomName, inputDirection);
                 reachedEndingRoom(roomName);
-                // get description based off of room
                 if (adventure.getRoomByName(roomName) != null) {
                     String descriptionByRoom = adventure.getRoomByName(roomName).getDescription();
                     String directionsToNextRoom = "From here you can go: " +
@@ -95,8 +96,10 @@ public class Game {
         return siebelFile;
     }
 
-    public void addItems() {
-
+    public void addItems(String input, String roomName) {
+        String item = input.substring(4);
+        adventure.getRoomByName(roomName).getItems().add(item);
+        stream.println("Items Visible: " + adventure.getRoomByName(roomName).getItemsCommaSeperated());
     }
 
     public void reachedEndingRoom(String roomName) {
@@ -105,6 +108,7 @@ public class Game {
             System.exit(1);
         }
     }
+
     public void exitProgramQuitExit(String inputDirection) {
         if (inputDirection.equalsIgnoreCase("QUIT") ||
                 inputDirection.equalsIgnoreCase("EXIT")) {
@@ -133,12 +137,13 @@ public class Game {
      */
     public boolean isDirectionValidGo(String inputDirection) {
         String inputGo = inputDirection.substring(0,3);
-        if (inputGo.equalsIgnoreCase("go ")) {
-            return true;
-        }
-        return false;
+        return inputGo.equalsIgnoreCase("go ");
     }
 
+    public boolean isValidAddItem(String input) {
+        String inputAdd = input.substring(0,4);
+        return inputAdd.equalsIgnoreCase("add ");
+    }
     /**
      * returns a String of the new room based off of the previous room and direction that the user input
      * @param adventure object of either siebel or libray json used to access rooms and directions
@@ -149,9 +154,10 @@ public class Game {
     public String getNextRoom(Adventure adventure, String roomName, String directionName) {
         directionName = directionName.substring(3);
         //returns the room of the next room based off of the previous room and direction that the user input
+        stream.println(roomName);
+        stream.println(directionName);
         String newRoomName = adventure.getRoomByName(roomName).getDirectionByName(directionName).getRoom();
         return newRoomName;
-
     }
 
     /**
