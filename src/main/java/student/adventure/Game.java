@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,7 +17,7 @@ import java.util.Scanner;
 public class Game {
 
     /** PrintStream used print to console*/
-    PrintStream stream = new PrintStream(System.out);
+    PrintStream stream;
 
     /** File that processes json */
     static File file;
@@ -36,12 +37,30 @@ public class Game {
     /** Scanner for user input */
     Scanner input = new Scanner(System.in);
 
+    public Game(OutputStream stream) throws IOException {
+        file = new File(getFileName());
+        this.stream = new PrintStream(stream);
+        adventure = new ObjectMapper().readValue(file, Adventure.class);
+        initializeStartingRoom();
+    }
+
+    public Game() throws IOException {
+        this(System.out);
+    }
+
+    public Adventure getAdventure() {
+        return adventure;
+    }
+
     /**
      *
      * @throws MalformedURLException
      */
     public void runGame() throws MalformedURLException {
         try {
+            /*file = new File(getFileName());
+            adventure = new ObjectMapper().readValue(file, Adventure.class);
+            initializeStartingRoom();*/
             printDescriptionsAndDirections();
         } catch(IOException exception) {
             System.out.println("cannot load");
@@ -54,9 +73,6 @@ public class Game {
      * @throws IOException
      */
     public void printDescriptionsAndDirections() throws IOException {
-        file = new File(getFileName());
-        adventure = new ObjectMapper().readValue(file, Adventure.class);
-        initializeStartingRoom();
         String roomName = adventure.getStartingRoom();
         while(true) {
             input = new Scanner(System.in);

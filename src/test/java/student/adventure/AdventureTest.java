@@ -31,7 +31,7 @@ public class AdventureTest {
     File file;
 
     @Before
-    public void setUp() throws MalformedURLException {
+    public void setUp() throws MalformedURLException, IOException {
        // inputFile = input.nextLine();
 
         System.setOut(new PrintStream(outContent));
@@ -43,57 +43,33 @@ public class AdventureTest {
         } catch (Exception exception) {
 
         }
+        System.setIn(new ByteArrayInputStream("src/main/resources/siebel.json".getBytes()));
         objGame = new Game();
     }
 
-  /* @Test
-    public void testSiebelFile() {
-        String input = "kdja";
-        System.setIn( new ByteArrayInputStream(input.getBytes()));
-         //ByteArrayInputStream inputContent = new ByteArrayInputStream();
-        //objGame.getFileName();
+    @Test
+    public void testAddItemsSiebelEntry() {
+        String input = "add penny";
+        //System.setIn(new ByteArrayInputStream(input.getBytes()));
+        objGame.addItems(input, "SiebelEntry");
+        String items = objGame.getAdventure().getRoomByName("SiebelEntry").getItemsCommaSeperated();
+        assertEquals("sweatshirt, key and penny", items);
+    }
 
-        assertEquals("src/main/resources/siebel.json", objGame.getFileName());
-        /*assertEquals("You are on Matthews, outside the Siebel Center \n" +
-                    "Your journey begins here \n" +
-                    "From here you can go: East", outContent.toString());
+    @Test
+    public void testRemoveItemsSiebelEntry() {
+        String input = "remove key";
+        objGame.removeItems(input, "SiebelEntry");
+        String items = objGame.getAdventure().getRoomByName("SiebelEntry").getItemsCommaSeperated();
+        assertEquals("sweatshirt", items);
+    }
+
+    /*@Test
+    public void testTeleport() {
+        String input = "teleport";
+        objGame.teleportItems("SiebelEntry");
+
     }*/
-
-  //  @Rule
-   // public final TextFromStandardInputStream systemInMock = emptyStandardInputStream();
-
-
-    @Test
-    public void testRandomFile() {
-        String input = "kdja";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        objGame = new Game();
-        assertEquals("src/main/resources/siebel.json", objGame.getFileName());
-    }
-
-    @Test
-    public void testLibraryFile() {
-        String input = "src/main/resources/library.json";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        objGame = new Game();
-        assertEquals("src/main/resources/library.json", objGame.getFileName());
-    }
-
-    @Test
-    public void testSiebelFile() {
-        String input = "src/main/resources/siebel.json";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        objGame = new Game();
-        assertEquals("src/main/resources/siebel.json", objGame.getFileName());
-    }
-
-    @Test
-    public void testSiebelURL() {
-        String input = "https://courses.grainger.illinois.edu/cs126/sp2020/resources/siebel.json";
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
-        objGame = new Game();
-        assertEquals("src/main/resources/siebel.json", objGame.getFileName());
-    }
 
     @Test
     public void testCorrectItemsSiebelEntry() {

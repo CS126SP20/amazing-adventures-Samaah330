@@ -17,7 +17,7 @@ import java.util.Scanner;
  */
 public class Main {
 
-    public static void main(String[] arg) throws MalformedURLException {
+    public static void main(String[] arg) throws MalformedURLException, IOException {
         Game game = new Game();
         game.runGame();
     }
