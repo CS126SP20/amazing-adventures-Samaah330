@@ -79,7 +79,7 @@ public class Game {
             String inputDirection = input.nextLine();
             exitProgramQuitExit(inputDirection);
             if (inputDirection.equalsIgnoreCase("teleport")) {
-                teleportItems(roomName);
+                askUserTeleportItems(roomName);
             } else if (isValidAddItem(inputDirection)) {
                 addItems(inputDirection, roomName);
             } else if (isValidRemoveItem(inputDirection)) {
@@ -135,7 +135,11 @@ public class Game {
      */
     public void removeItems(String input, String roomName) {
         String item = input.substring(7);
-        if (adventure.getRoomByName(roomName).getItems().contains(item)) {
+        if (adventure.getRoomByName(roomName).getItemsCommaSeperated()
+            .equals("No Items"))  {
+            stream.println("Cannot remove items from this room because there are no items");
+            return;
+        } else if (adventure.getRoomByName(roomName).getItems().contains(item)) {
             adventure.getRoomByName(roomName).getItems().remove(item);
             stream.println("Items Visible: " + adventure.getRoomByName(roomName).getItemsCommaSeperated());
         } else {
@@ -147,35 +151,51 @@ public class Game {
      *
      * @param roomName
      */
-    public void teleportItems(String roomName) {
+    public void askUserTeleportItems(String roomName) {
         stream.println("which item would you like to teleport?");
 
-        input = new Scanner(System.in);
         String inputItem = input.nextLine();
 
-        while (!adventure.getRoomByName(roomName).getItems().contains(inputItem)) {
+        while(!isTeleportableItem(roomName, inputItem)) {
             stream.println(inputItem + " does not exist in this room for you to teleport." + "\n" +
                     "Please pick another item.");
-            input = new Scanner(System.in);
             inputItem = input.nextLine();
         }
 
         stream.println("where would you like to teleport " + inputItem + "?");
-        input = new Scanner(System.in);
         String inputRoom = input.nextLine();
-        stream.println(inputRoom);
 
-        // doesnt work because get rooms returns an object and that object is not equal to the string
-        while (adventure.getRoomByName(inputRoom) == null) {
+        while (!isValidRoom(inputRoom)) {
             stream.println(inputRoom + " does not exist. Please teleport " + inputItem + " to another room");
-            input = new Scanner(System.in);
             inputRoom = input.nextLine();
         }
 
+        teleportItems(roomName, inputItem, inputRoom);
+        stream.println(inputItem + " has been teleported " + "to " + inputRoom);
+    }
+
+    public boolean isTeleportableItem(String roomName, String inputItem) {
+        return adventure.getRoomByName(roomName).getItems().contains(inputItem);
+    }
+
+    public boolean isValidRoom(String inputRoom) {
+        return adventure.getRoomByName(inputRoom) != null;
+    }
+
+    public void teleportItems(String roomName, String inputItem, String inputRoom) {
         adventure.getRoomByName(roomName).getItems().remove(inputItem);
         adventure.getRoomByName(inputRoom).getItems().add(inputItem);
+    }
 
-        stream.println(inputItem + " has been teleported " + "to " + inputRoom);
+        // need to check based off of room, item, if the item has been teleported
+    // check if item is not in the previous room
+    // check if item is in the new room
+
+
+    public void teleportNonExistantItem(String inputItem) {
+        stream.println(inputItem + " does not exist in this room for you to teleport." + "\n" +
+                "Please pick another item.");
+        inputItem = input.nextLine();
     }
 
     /**

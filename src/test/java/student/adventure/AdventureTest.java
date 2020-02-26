@@ -1,42 +1,22 @@
 package student.adventure;
 
-import static org.junit.Assert.assertEquals;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Scanner;
 
+import static org.junit.Assert.*;
 
-// checking what was printed to console/ printstream
-// how to check if a url exists
 public class AdventureTest {
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-
-    //private final PrintStream originalOut = System.out;
-    //private final PrintStream originalErr = System.err;
-
-   // String inputFile;
-
-    //Scanner input = new Scanner(System.in);
 
     Adventure objAdventure;
     Game objGame;
     File file;
 
     @Before
-    public void setUp() throws MalformedURLException, IOException {
-       // inputFile = input.nextLine();
-
-        System.setOut(new PrintStream(outContent));
-        System.setErr(new PrintStream(errContent));
-
+    public void setUp() throws IOException {
         file = new File("src/main/resources/siebel.json");
         try {
             objAdventure = new ObjectMapper().readValue(file, Adventure.class);
@@ -44,32 +24,91 @@ public class AdventureTest {
 
         }
         System.setIn(new ByteArrayInputStream("src/main/resources/siebel.json".getBytes()));
-        objGame = new Game();
+        objGame = new Game(outContent);
     }
 
     @Test
-    public void testAddItemsSiebelEntry() {
-        String input = "add penny";
-        //System.setIn(new ByteArrayInputStream(input.getBytes()));
+    public void testAddItemSiebelEntry() {
+        String input = "aDd penny";
         objGame.addItems(input, "SiebelEntry");
         String items = objGame.getAdventure().getRoomByName("SiebelEntry").getItemsCommaSeperated();
         assertEquals("sweatshirt, key and penny", items);
     }
 
     @Test
-    public void testRemoveItemsSiebelEntry() {
-        String input = "remove key";
-        objGame.removeItems(input, "SiebelEntry");
-        String items = objGame.getAdventure().getRoomByName("SiebelEntry").getItemsCommaSeperated();
-        assertEquals("sweatshirt", items);
+    public void testAddItemsTwiceMatthewsStreet() {
+        objGame.addItems("add honey", "MatthewsStreet");
+        objGame.addItems("add pizza", "MatthewsStreet");
+        String items = objGame.getAdventure().getRoomByName("MatthewsStreet").getItemsCommaSeperated();
+        assertEquals("coin, honey and pizza", items);
     }
 
-    /*@Test
-    public void testTeleport() {
-        String input = "teleport";
-        objGame.teleportItems("SiebelEntry");
+    @Test
+    public void testRemoveWhenNoItemsPresentSiebelNorthHallway() {
+        objGame.removeItems("remove poster", "SiebelNorthHallway");
+        assertTrue(outContent.toString().contains("Cannot remove items from this room because there are no items" ));
+    }
 
-    }*/
+    @Test
+    public void testRemoveAllItemsAcmOffice() {
+        objGame.removeItems("remove swag", "AcmOffice");
+        objGame.removeItems("remove pizza", "AcmOffice");
+
+        String items = objGame.getAdventure().getRoomByName("AcmOffice").getItemsCommaSeperated();
+        assertEquals("No Items", items);
+    }
+
+    @Test
+    public void addAndRemoveItemAcmOffice() {
+        objGame.addItems("add shoe", "AcmOffice");
+        objGame.removeItems("remove swag", "AcmOffice");
+        String items = objGame.getAdventure().getRoomByName("AcmOffice").getItemsCommaSeperated();
+        assertEquals("pizza and shoe", items);
+    }
+
+    @Test
+    public void addThenRemoveSameItemSiebel1112()  {
+        objGame.addItems("add polish","Siebel1112");
+        objGame.removeItems("remove polish","Siebel1112");
+        String items = objGame.getAdventure().getRoomByName("Siebel1112").getItemsCommaSeperated();
+        assertEquals("USB-C connector and grading rubric", items);
+    }
+
+    @Test
+    public void testRemoveNonexistentItemSiebelEastHallway() {
+        String input = "remove honey";
+        objGame.removeItems(input, "SiebelEastHallway");
+        assertTrue(outContent.toString().contains("honey does not exist in this room"));
+    }
+
+    @Test
+    public void testRemoveItemsSiebelBasement() {
+        String input = "remove key";
+        objGame.removeItems(input, "SiebelBasement");
+        String items = objGame.getAdventure().getRoomByName("SiebelBasement").getItemsCommaSeperated();
+        assertEquals("pencil", items);
+    }
+
+    /*
+    @Test
+    public void testTeleportAddItemToSiebelEntry() {
+        String inputItem = "coin";
+        String currentRoom = "MatthewsStreet";
+        String inputRoom = "SiebelEntry";
+        objGame.teleportItems(currentRoom, inputItem, inputRoom);
+        String items = objGame.getAdventure().getRoomByName(inputRoom).getItemsCommaSeperated();
+        assertEquals("sweatshirt, key and coin", items);
+    }
+
+    @Test
+    public void testTeleportRemoveItemFromMatthewsStreet() {
+        String inputItem = "coin";
+        String currentRoom = "MatthewsStreet";
+        String inputRoom = "SiebelEntry";
+        objGame.teleportItems(currentRoom, inputItem, inputRoom);
+        String items = objGame.getAdventure().getRoomByName(currentRoom).getItemsCommaSeperated();
+        assertEquals("No Items", items);
+    }
 
     @Test
     public void testCorrectItemsSiebelEntry() {
@@ -77,6 +116,16 @@ public class AdventureTest {
         assertEquals("sweatshirt and key", items);
     }
 
+    @Test
+    public void testValidItemToTeleportFalse() {
+        assertFalse(objGame.isTeleportableItem("MatthewsStreet", "Skateboard"));
+    }
+
+    @Test
+    public void testValidItemToTeleportTrue() {
+        assertTrue(objGame.isTeleportableItem("MatthewsStreet", "coin"));
+    }
+*/
     @Test
     public void testCorrecctItemsMathewStreet() {
         String items =  objAdventure.getRoomByName("MatthewsStreet").getItemsCommaSeperated();
@@ -148,17 +197,6 @@ public class AdventureTest {
     }
 
     @Test
-    public void testValidDirectionFromSiebelEntryToEast() {
-        String roomName = "SiebelEntry";
-        String direction = "eAst";
-        String nextRoom = objAdventure.getRoomByName(roomName).getDirectionByName(direction).getRoom();
-        String nextRoomDescription = objAdventure.getRoomByName(nextRoom).getDescription();
-
-        assertEquals("You are in the east hallway.  You can see Einstein Bros' Bagels and a stairway."
-                ,nextRoomDescription);
-    }
-
-    @Test
     public void testValidDirectionFromSiebelBasementToUp() {
         String roomName = "SiebelBasement";
         String direction = "UP";
@@ -170,14 +208,38 @@ public class AdventureTest {
     }
 
     @Test
+    public void testValidDirectionFromMatthewStreetToEast() {
+        String roomName = "MatthewsStreet";
+        String direction = "East";
+        String nextRoom = objAdventure.getRoomByName(roomName).getDirectionByName(direction).getRoom();
+        String nextRoomDescription = objAdventure.getRoomByName(nextRoom).getDescription();
+
+        assertEquals("You are in the west entry of Siebel Center. You can see the elevator," +
+                " the ACM office, and hallways to the north and east.", nextRoomDescription);
+    }
+
+    @Test
+    public void testValidDirectionFromSiebelEntryToNorth() {
+        String roomName = "SiebelEntry";
+        String direction = "north";
+        String nextRoom = objAdventure.getRoomByName(roomName).getDirectionByName(direction).getRoom();
+        String nextRoomDescription = objAdventure.getRoomByName(nextRoom).getDescription();
+
+        assertEquals("You are in the north hallway.  You can see Siebel 1112 and the door toward NCSA."
+                ,nextRoomDescription);
+    }
+
+
+
+    @Test
     public void testValidDirectionFromSiebelNorthHallwayToNorthEast() {
         String roomName = "SiebelNorthHallway";
         String direction = "noRThEast";
         String nextRoom = objAdventure.getRoomByName(roomName).getDirectionByName(direction).getRoom();
         String nextRoomDescription = objAdventure.getRoomByName(nextRoom).getDescription();
 
-        assertEquals("You are in Siebel 1112.  There is space for two code reviews in this room."
-                , nextRoomDescription);
+       assertEquals("You are in Siebel 1112.  There is space for two code reviews in this room."
+        , nextRoomDescription);
     }
 
     @Test
