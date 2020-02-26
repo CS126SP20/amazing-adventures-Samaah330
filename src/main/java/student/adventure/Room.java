@@ -31,11 +31,12 @@ public class Room {
     }
 
     /**
-     *
-     * @param directions
-     * @param name
-     * @param description
-     * @param items
+     * Constructor for Room class
+     * Gives value for directions, name, description, and items
+     * @param directions List of possible direction in the room
+     * @param name Name of the room
+     * @param description Description of the room
+     * @param items List of items present in the room
      */
     public Room(String name, String description, List<String> items, List<Direction> directions) {
         super();
@@ -60,6 +61,11 @@ public class Room {
         return items;
     }
 
+    /**
+     * Iterates through items and puts them in a format with commas and "and"
+     * @return String of items with commas and "and" in between them
+     * If there are no items, returns "No Items"
+     */
     public String getItemsCommaSeperated() {
         int count = 0;
         String allItems = "";
@@ -82,6 +88,11 @@ public class Room {
         return allItems;
     }
 
+    /**
+     * Gets the direction based off of the directionName that the user input
+     * @param directionName Direction name the user input
+     * @return null if the directionName does not exist, otherwise returns the direction
+     */
     public Direction getDirectionByName(String directionName) {
         for (Direction direction: directions) {
             if (direction.getDirectionName().equalsIgnoreCase((directionName))) {
@@ -111,5 +122,4 @@ public class Room {
         }
         return allDirections;
     }
-
 }

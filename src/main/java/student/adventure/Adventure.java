@@ -30,10 +30,11 @@ public class Adventure {
     }
 
     /**
-     *
-     * @param startingRoom
-     * @param rooms
-     * @param endingRoom
+     * Constructor for Adventure class
+     * Assigns value to startingRoom, rooms, and endingRoom
+     * @param startingRoom The room that the user starts in
+     * @param rooms The list of rooms in the adventure
+     * @param endingRoom The ending room that the game stops in
      */
     public Adventure(String startingRoom, String endingRoom, List<Room> rooms) {
         super();

@@ -12,7 +12,7 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests File and Url input.
+ * Tests File and Url input
  */
 public class FileUrlTest {
 
@@ -66,5 +66,4 @@ public class FileUrlTest {
         objGame = new Game(outputStream);
         assertEquals("src/main/resources/siebel.json", objGame.getFileName());
     }
-
 }

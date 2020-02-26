@@ -24,9 +24,10 @@ public class Direction {
     }
 
     /**
-     *
-     * @param directionName
-     * @param room
+     * Constructor for Direction class
+     * Assigns value to directionName and room
+     * @param directionName The direction that the user wishes to move
+     * @param room The current room that the user is in
      */
     public Direction(String directionName, String room) {
         super();
