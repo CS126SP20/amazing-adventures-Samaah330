@@ -175,6 +175,10 @@ public class Game {
     }
 
     public boolean isTeleportableItem(String roomName, String inputItem) {
+        if (adventure.getRoomByName(roomName).getItemsCommaSeperated()
+            .equals("No Items")) {
+            return false;
+        }
         return adventure.getRoomByName(roomName).getItems().contains(inputItem);
     }
 
@@ -185,17 +189,6 @@ public class Game {
     public void teleportItems(String roomName, String inputItem, String inputRoom) {
         adventure.getRoomByName(roomName).getItems().remove(inputItem);
         adventure.getRoomByName(inputRoom).getItems().add(inputItem);
-    }
-
-        // need to check based off of room, item, if the item has been teleported
-    // check if item is not in the previous room
-    // check if item is in the new room
-
-
-    public void teleportNonExistantItem(String inputItem) {
-        stream.println(inputItem + " does not exist in this room for you to teleport." + "\n" +
-                "Please pick another item.");
-        inputItem = input.nextLine();
     }
 
     /**

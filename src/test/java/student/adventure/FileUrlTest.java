@@ -11,6 +11,9 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Tests File and Url input.
+ */
 public class FileUrlTest {
 
     Adventure objAdventure;

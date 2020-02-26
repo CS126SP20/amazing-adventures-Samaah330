@@ -52,20 +52,15 @@ public class Adventure {
         return endingRoom;
     }
 
-    @JsonProperty("rooms")
-    public List<Room> getRooms() {
-        return rooms;
-    }
-
     /**
      * returns the room based off of the roomName
      * @param roomName name of the room as a String
      * @return returns a room from a list of Rooms
      */
     public Room getRoomByName(String roomName) {
-        for (Room myRoom: this.rooms) {
-            if (myRoom.getName().equals(roomName)) {
-                return myRoom;
+        for (Room room: rooms) {
+            if (room.getName().equals(roomName)) {
+                return room;
             }
         }
         return null;
