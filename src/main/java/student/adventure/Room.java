@@ -60,21 +60,6 @@ public class Room {
         return items;
     }
 
-    @JsonProperty("items")
-    public void setItems(List<String> items) {
-        this.items = items;
-    }
-
-    public Room withItems(List<String> items) {
-        this.items = items;
-        return this;
-    }
-
-    @JsonProperty("directions")
-    public List<Direction> getDirections() {
-        return directions;
-    }
-
     public String getItemsCommaSeperated() {
         int count = 0;
         String allItems = "";

@@ -9,7 +9,6 @@ import java.io.IOException;
  * @author Samaah Khan
  */
 public class Main {
-
     public static void main(String[] arg) throws IOException {
         Game game = new Game();
         game.runGame();

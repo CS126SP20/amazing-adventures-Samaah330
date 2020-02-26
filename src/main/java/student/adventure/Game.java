@@ -6,36 +6,66 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Scanner;
 
 
 /**
- * Class that holds most of the functionality and helper methods used in Main.java
+ * Game displays items, room description, directions,
+ * and allows user to navigate through rooms, add/remove items,
+ * and teleport.
  */
 public class Game {
 
     /** PrintStream used print to console*/
-    PrintStream stream;
+    private PrintStream stream;
 
     /** File that processes json */
-    static File file;
-
-    /** Url that processes json */
-    static URL url;
+    private static File file;
 
     /** Default file used if user does not input valid file or url */
-    final static String siebelFile = "src/main/resources/siebel.json";
+    private final static String siebelFile = "src/main/resources/siebel.json";
 
     /** Url for Siebel */
-    final static String siebelURL = "https://courses.grainger.illinois.edu/cs126/sp2020/resources/siebel.json";
+    private final static String siebelURL = "https://courses.grainger.illinois.edu/cs126/sp2020/resources/siebel.json";
 
     /** Instance of Adventure class*/
-    Adventure adventure;
+    private Adventure adventure;
 
     /** Scanner for user input */
-    Scanner input = new Scanner(System.in);
+    private Scanner input = new Scanner(System.in);
+
+    /** Word used to signal that the user wants to teleport an item*/
+    private String teleport = "teleport";
+
+    /** The index that the item starts when the user inputs "add " item */
+    private final int startIndexItemAdd = 4;
+
+    /** The index that the item starts when the user inputs "remove" item */
+    private final int startIndexItemRemove = 7;
+
+    /** The index that the direction name from the input starts*/
+    private final int startindexDirection = 3;
+
+    /** The start index of entire user input */
+    private final int startIndexInput = 0;
+
+    /** Message when there are no items in the room*/
+    private final String noItems = "No Items";
+
+    /** A word that is used when user wants to quit/exit game*/
+    private final String quit = "QUIT";
+
+    /** Another word that is use when the user wants to quit/exit game*/
+    private final String exit = "EXIT";
+
+    /** Word used to indicate user wants to remove an item*/
+    private final String remove = "remove ";
+
+    /** Word used to indicate user wants to add an item*/
+    private final String add = "add ";
+
+    /** Word used to indicate user wants to go a certain direction*/
+    private final String go = "go ";
 
     public Game(OutputStream stream) throws IOException {
         file = new File(getFileName());
@@ -48,95 +78,95 @@ public class Game {
         this(System.out);
     }
 
+    /**
+     * Used to access the instance of Adventure in tests
+     * @return instance of Adventure
+     */
     public Adventure getAdventure() {
         return adventure;
     }
 
     /**
-     *
-     * @throws MalformedURLException
+     * runs one game through an adventure based on rooms, directions, and items in a json file
      */
-    public void runGame() throws MalformedURLException {
+    public void runGame(){
         try {
-            /*file = new File(getFileName());
-            adventure = new ObjectMapper().readValue(file, Adventure.class);
-            initializeStartingRoom();*/
-            printDescriptionsAndDirections();
-        } catch(IOException exception) {
-            System.out.println("cannot load");
+            String roomName = adventure.getStartingRoom();
+            while (true) {
+                input = new Scanner(System.in);
+                String inputDirection = input.nextLine();
+                exitProgramQuitExit(inputDirection);
+                if (inputDirection.equalsIgnoreCase(teleport)) {
+                    askUserTeleportItems(roomName);
+                } else if (doesUserWantAddItem(inputDirection)) {
+                    addItems(inputDirection, roomName);
+                } else if (doesUserWantRemoveItem(inputDirection)) {
+                    removeItems(inputDirection, roomName);
+                } else if (isValidDirection(inputDirection)) {
+                    roomName = getNextRoom(adventure, roomName, inputDirection);
+                    reachedEndingRoom(roomName);
+                    if (adventure.getRoomByName(roomName) != null) {
+                        String descriptionByRoom = adventure.getRoomByName(roomName).getDescription();
+                        String directionsToNextRoom = "From here you can go: " +
+                                adventure.getRoomByName(roomName).getAllDirectionsCommaSeparated();
+                        String items = "Items visible: " + adventure.getRoomByName(roomName).getItemsCommaSeperated();
+                        stream.println(descriptionByRoom + "\n" + directionsToNextRoom + "\n" + items);
+                    }
+                } else {
+                    stream.println(isInvalidInput(inputDirection));
+                }
+            }
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
     }
 
     /**
-     *
-     * @throws IOException
-     */
-    public void printDescriptionsAndDirections() throws IOException {
-        String roomName = adventure.getStartingRoom();
-        while(true) {
-            input = new Scanner(System.in);
-            String inputDirection = input.nextLine();
-            exitProgramQuitExit(inputDirection);
-            if (inputDirection.equalsIgnoreCase("teleport")) {
-                askUserTeleportItems(roomName);
-            } else if (isValidAddItem(inputDirection)) {
-                addItems(inputDirection, roomName);
-            } else if (isValidRemoveItem(inputDirection)) {
-                removeItems(inputDirection, roomName);
-            } else if (isValidDirection(inputDirection)) {
-                roomName = getNextRoom(adventure, roomName, inputDirection);
-                reachedEndingRoom(roomName);
-                if (adventure.getRoomByName(roomName) != null) {
-                    String descriptionByRoom = adventure.getRoomByName(roomName).getDescription();
-                    String directionsToNextRoom = "From here you can go: " +
-                            adventure.getRoomByName(roomName).getAllDirectionsCommaSeparated();
-                    String items = "Items visible: " + adventure.getRoomByName(roomName).getItemsCommaSeperated();
-                    stream.println(descriptionByRoom + "\n" + directionsToNextRoom + "\n" + items);
-                }
-            } else {
-                stream.println(isInvalidInput(inputDirection));
-            }
-        }
-    }
-
-    /**
-     *
-     * @return
+     * Checks what user input as file or url.
+     * If user inputs Siebel URL
+     * @return a file that user input, returns default file, or returns siebelFile if
+     * input matches siebelURL
      */
     public String getFileName() {
-        String inputFile = input.nextLine();
+        String inputFileOrUrl = input.nextLine();
 
-        if (inputFile.equals(siebelURL)) {
+        if (inputFileOrUrl.equals(siebelURL)) {
             return siebelFile;
         }
-        file = new File(inputFile);
+
+        file = new File(inputFileOrUrl);
+
         if (file.exists()) {
-            return inputFile;
+            return inputFileOrUrl;
         }
+
         return siebelFile;
     }
 
     /**
-     *
-     * @param input
-     * @param roomName
+     * Adds item to room if user chooses to add a new item
+     * Prints updated items in the room after adding
+     * @param input Contains "add" and an item that the user wants to add to a room
+     * @param roomName The room that the user wants to add the item to
      */
     public void addItems(String input, String roomName) {
-        String item = input.substring(4);
+        String item = input.substring(startIndexItemAdd);
         adventure.getRoomByName(roomName).getItems().add(item);
         stream.println("Items Visible: " + adventure.getRoomByName(roomName).getItemsCommaSeperated());
     }
 
     /**
-     *
-     * @param input
-     * @param roomName
+     * Removes item from the room if user chooses to remove the item
+     * If there are no items in the room to remove, prints error message
+     * If the item does not exist in the room prints error message
+     * Prints updated items in the room after removing
+     * @param input Contains "remove" and an item that the user wants to remove from the room
+     * @param roomName The room that the user wants to remove the item from
      */
     public void removeItems(String input, String roomName) {
-        String item = input.substring(7);
+        String item = input.substring(startIndexItemRemove);
         if (adventure.getRoomByName(roomName).getItemsCommaSeperated()
-            .equals("No Items"))  {
+            .equals(noItems))  {
             stream.println("Cannot remove items from this room because there are no items");
             return;
         } else if (adventure.getRoomByName(roomName).getItems().contains(item)) {
@@ -148,8 +178,11 @@ public class Game {
     }
 
     /**
-     *
-     * @param roomName
+     * Asks user if they want to teleport an item from the current room to another room
+     * after they input "teleport" into the console
+     * If the item cannot be teleported because it does not exist in the room, prints error message
+     * If the room does not exist, prints error message
+     * @param roomName the current room that the user wants to teleport the item from
      */
     public void askUserTeleportItems(String roomName) {
         stream.println("which item would you like to teleport?");
@@ -174,26 +207,46 @@ public class Game {
         stream.println(inputItem + " has been teleported " + "to " + inputRoom);
     }
 
+    /**
+     * Checks if the item can be teleported by checking if there are any items in
+     * the current room
+     * Then checks if the item that the user wants to teleport is in the current room
+     * @param roomName The current room that the user is at
+     * @param inputItem The item that the user wishes to teleport
+     * @return False if there are no items in the current room, true otherwise
+     */
     public boolean isTeleportableItem(String roomName, String inputItem) {
         if (adventure.getRoomByName(roomName).getItemsCommaSeperated()
-            .equals("No Items")) {
+            .equals(noItems)) {
             return false;
         }
         return adventure.getRoomByName(roomName).getItems().contains(inputItem);
     }
 
+    /**
+     * Checks if the room is valid by seeing if it exists
+     * @param inputRoom The current room that the user is at
+     * @return True if the room exists, false otherwise
+     */
     public boolean isValidRoom(String inputRoom) {
         return adventure.getRoomByName(inputRoom) != null;
     }
 
+    /**
+     * Removes item from the current room and adds it to the room that the uesr wants
+     * to teleport it to
+     * @param roomName the current room that the user is at
+     * @param inputItem the item that the user wants to teleport
+     * @param inputRoom the room that the user wants to teleport the item to
+     */
     public void teleportItems(String roomName, String inputItem, String inputRoom) {
         adventure.getRoomByName(roomName).getItems().remove(inputItem);
         adventure.getRoomByName(inputRoom).getItems().add(inputItem);
     }
 
     /**
-     *
-     * @param roomName
+     * Exits the program if the user reaches the final room
+     * @param roomName The room that the user is currently at
      */
     public void reachedEndingRoom(String roomName) {
         if (roomName.equals(adventure.getEndingRoom())) {
@@ -203,12 +256,12 @@ public class Game {
     }
 
     /**
-     *
-     * @param inputDirection
+     * Exits the program if the user inputs the words quit or exit into the cosole
+     * @param input What the user input into the console
      */
-    public void exitProgramQuitExit(String inputDirection) {
-        if (inputDirection.equalsIgnoreCase("QUIT") ||
-                inputDirection.equalsIgnoreCase("EXIT")) {
+    public void exitProgramQuitExit(String input) {
+        if (input.equalsIgnoreCase(quit) ||
+                input.equalsIgnoreCase(exit)) {
             System.exit(1);
         }
     }
@@ -234,45 +287,46 @@ public class Game {
      */
     public boolean isDirectionValidGo(String inputDirection) {
         String inputGo = inputDirection.substring(0,3);
-        return inputGo.equalsIgnoreCase("go ");
+        return inputGo.equalsIgnoreCase(go);
     }
 
     /**
-     *
-     * @param input
-     * @return
+     * Checks if the user wants to add an item by checking if the first
+     * word is "add"
+     * @param input What the user input into the console
+     * @return returns true if the user wants to add, false otherwise
      */
-    public boolean isValidAddItem(String input) {
+    public boolean doesUserWantAddItem(String input) {
         String inputAdd = input.substring(0,4);
-        return inputAdd.equalsIgnoreCase("add ");
+        return inputAdd.equalsIgnoreCase(add);
     }
 
     /**
-     *
-     * @param input
-     * @return
+     * Checks if the user wants to remove an item by checking if the first
+     * word is "remove "
+     * @param input What the input into the console
+     * @return returns true if the user wants to remove, false otherwise
      */
-    public boolean isValidRemoveItem(String input) {
-        String inputRemove = input.substring(0,7);
-        return inputRemove.equalsIgnoreCase("remove ");
+    public boolean doesUserWantRemoveItem(String input) {
+        String inputRemove = input.substring(startIndexInput, startIndexItemRemove);
+        return inputRemove.equalsIgnoreCase( remove);
     }
 
     /**
-     * returns a String of the new room based off of the previous room and direction that the user input
+     * Returns a String of the new room based off of the previous room and direction that the user input
      * @param adventure object of either siebel or libray json used to access rooms and directions
      * @param roomName name of the room used to get the next Room
      * @param directionName direction used that the player inputed to get the nextRoom
      * @return returns a String of the new room
      */
     public String getNextRoom(Adventure adventure, String roomName, String directionName) {
-        directionName = directionName.substring(3);
-        //returns the room of the next room based off of the previous room and direction that the user input
+        directionName = directionName.substring(startindexDirection);
         String newRoomName = adventure.getRoomByName(roomName).getDirectionByName(directionName).getRoom();
         return newRoomName;
     }
 
     /**
-     * checks to see if the user input a valid direction
+     * Checks to see if the user input a valid direction
      * @param directionName name of direction that the user input
      * @return returns false if the direction inputed by the user is not valid
      */
